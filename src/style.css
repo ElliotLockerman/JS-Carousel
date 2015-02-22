@@ -1,0 +1,101 @@
+
+html
+{
+    background-color:#eeeeee;
+}
+
+
+body
+{
+	padding-left:40px;
+	padding-right:40px;
+	padding-bottom:20px;
+	padding-top:20px;
+
+	margin-left:auto;
+	margin-right:auto;
+    margin-bottom:30px;
+
+	background-color:white;
+	width:1200px;
+	
+    box-shadow: 2px 2px 3px #d8d8d8;
+
+    font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif;
+}
+
+h1
+{
+	text-align:center;
+	padding-top:20px;
+    font-size:50px;
+}
+
+h2, .cell
+{
+	font-size:1.5em;
+	font-weight:bold;
+	text-align:left;
+	padding-top:5px;
+    padding-bottom:0px;
+
+}
+
+h3, th
+{
+	padding-top:30px;
+	text-align:left;
+	padding-left:20px;
+}
+
+hr
+{
+    border:0px;
+    height:10px;
+    
+	width:90%;
+    margin-left:auto;
+    margin-right:auto;
+	margin-top:40px;
+	margin-bottom:40px;
+	
+    
+    background-color:#eeeeee;
+}
+
+a:link
+{
+    color:666666;
+}
+
+
+ol
+{
+	line-height:150%;
+}
+
+
+
+
+td
+{
+	line-height:150%;
+	padding:20px;
+	float:left;
+	white-space:nowrap;
+}
+
+table
+{
+	margin-left:auto;
+	margin-right:auto;
+}
+
+
+
+
+
+
+
+
+

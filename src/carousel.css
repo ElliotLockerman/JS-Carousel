@@ -1,0 +1,143 @@
+
+
+
+.carousel /* whole carousel needs to be make javascript-missing failsafe*/
+{
+    position:relative;
+    height:630px; /* album_cover + text*/
+    width:750px; /*image + space for each button*/
+    margin-left:auto;
+    margin-right:auto;
+    margin-top:40px;
+    margin-bottom:40px;
+	background-color:#eeeeee;
+	padding-bottom:50px;
+	padding-top:20px;
+	
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.carousel_button_left, .carousel_button_right
+{
+    position:absolute;
+	top:0;
+    width:75px;
+    height:100%;/* same as image*/
+	z-index:15;
+}
+
+.carousel_button_left:hover, .carousel_button_right:hover
+{
+	background-color:#e7e7e7;
+}
+
+
+.carousel_button_left
+{
+    left:0px; /* same as carousel padding */
+}
+
+.carousel_button_right
+{
+    right:0px; /* same as carousel padding */
+}
+
+.carousel_mask
+{ 
+    position:relative;
+    display:block;
+    overflow:hidden;
+    white-space:nowrap;
+    width:600px; /* same as album_cover*/
+    margin-left:auto;
+    margin-right:auto;
+	z-index:10;
+}
+
+.carousel_slider
+{
+    position:relative;
+    left:0px;
+	height:630px;/* same as carousel*/
+	font-size:0px; /* needed to get rid of space between elements */
+	z-index:5;
+	
+	display:block;
+}
+
+.slider_element
+{
+	display:inline-block;
+	width:100%;
+	height:630px;/* same as carousel*/
+}
+
+.slider_element_text
+{
+	font-size:20px; 
+	text-align:center;
+	font-weight:bold;
+	padding-bottom:10px;
+	color:#444444;
+}
+
+.slider_element_image /* For putting an image in the element */
+{
+	max-width:600px;
+	max-height:600px;
+	display:block;
+	margin-left:auto;
+	margin-right:auto;
+	
+	/* Vertical center */
+	position: relative;
+  	top: 50%;
+ 	transform: translateY(-50%);
+}
+
+
+
+.cell
+{
+	width:399px;
+	height:399px;
+	text-align:center;
+	
+	float:left;
+}
+
+
+.triangle_left, .triangle_right
+{
+	width: 0;
+	height: 0;
+	border-style: solid;
+	opacity:0.1;
+	
+	/* Vertical center */
+	position: relative;
+  	top: 50%;
+ 	transform: translateY(-50%);
+	
+	display:block;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.triangle_left
+{
+	border-width: 40px 40px 40px 0;
+	border-color: transparent #000000 transparent transparent;
+}
+
+
+.triangle_right
+{
+	border-width: 40px 0 40px 40px;
+	border-color: transparent transparent transparent #000000;
+}
