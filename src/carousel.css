@@ -1,19 +1,10 @@
 
-
-
+/* Vital stuff */
 .carousel /* whole carousel needs to be make javascript-missing failsafe*/
 {
     position:relative;
-    height:630px; /* album_cover + text*/
-    width:750px; /*image + space for each button*/
-    margin-left:auto;
-    margin-right:auto;
-    margin-top:40px;
-    margin-bottom:40px;
-	background-color:#eeeeee;
-	padding-bottom:50px;
-	padding-top:20px;
 	
+	/* Disable selecting divs */
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
 	-khtml-user-select: none;
@@ -31,20 +22,17 @@
 	z-index:15;
 }
 
-.carousel_button_left:hover, .carousel_button_right:hover
-{
-	background-color:#e7e7e7;
-}
+
 
 
 .carousel_button_left
 {
-    left:0px; /* same as carousel padding */
+    left:0px; /* 0 for outside, same as button width for inside */
 }
 
 .carousel_button_right
 {
-    right:0px; /* same as carousel padding */
+    right:0px; /* 0 for outside, same as button width for inside */
 }
 
 .carousel_mask
@@ -141,3 +129,60 @@
 	border-width: 40px 0 40px 40px;
 	border-color: transparent transparent transparent #000000;
 }
+
+/* End vital stuff */
+
+
+
+
+
+
+
+
+
+
+
+/* Default theme - light */
+.carousel
+{
+	/* Sizes and positions */
+    height:630px; /* sum of content heights (generally, slider_element_image + .slider_element_text [offer auto option?])*/
+    width:750px; /*image (+ space for each button, if they're outside [offer auto option?])*/
+	
+	padding-bottom:50px;
+	padding-top:20px;
+	
+    margin-top:40px;
+    margin-bottom:40px;
+    margin-left:auto;
+    margin-right:auto;
+    
+	/* Color */
+	background-color:#eeeeee;
+	
+	
+}
+
+
+.carousel_button_left:hover, .carousel_button_right:hover
+{
+	background-color:#e7e7e7;
+}
+
+.slider_element_text
+{
+	font-size:20px; 
+	text-align:center;
+	font-weight:bold;
+	padding-bottom:10px;
+	color:#aaaaaa;
+}
+
+
+.slider_element_image
+{
+	max-width:600px;
+	max-height:600px;
+}
+
+/* End default theme */
