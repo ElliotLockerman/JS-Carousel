@@ -224,12 +224,24 @@ window.addEventListener("load", function()
 
 function px_to_int(px)
 {
-    px.replace("px", "")
+	if(px.indexOf("%") != -1 || px.indexOf("em") != -1 || px.indexOf("px") == -1)
+	{
+		console.error("px_to_int() requires a string containing a number followed by \"px\"");
+		return;
+	}
+	
+	px.replace("px", "");
     return parseInt(px,10);
 }
 
 function int_to_px(px)
 {
+	if(typeof px !== "number")
+	{
+		console.error("int_to_px() requires a number");
+		return;
+	}
+	
     return px + "px";
 }
 
