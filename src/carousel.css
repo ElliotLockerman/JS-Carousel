@@ -16,9 +16,6 @@
 .carousel_button_left, .carousel_button_right
 {
     position:absolute;
-	top:0;
-    width:75px;
-    height:100%;/* same as image*/
 	z-index:15;
 }
 
@@ -163,6 +160,21 @@
 	
 }
 
+.carousel_mask
+{ 
+    width:600px; /* same as album_cover*/
+}
+
+
+.carousel_button_left, .carousel_button_right
+{
+    position:absolute;
+	top:0;
+    width:75px;
+    height:100%;/* same as image*/
+	z-index:15;
+}
+
 
 .carousel_button_left:hover, .carousel_button_right:hover
 {
@@ -184,5 +196,8 @@
 	max-width:600px;
 	max-height:600px;
 }
+
+
+
 
 /* End default theme */

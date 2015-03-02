@@ -46,7 +46,7 @@ function Carousel(element)
 	_this.slider_styles = window.getComputedStyle(_this.slider);
 	_this.number_of_elements = this.slider.children.length; // Eventually, loop through and get by class name
 
-	_this.element_width = 600; // Eventually should be automatic
+	_this.element_width = 600; // Eventually should be automatic - same width as mask, not as elements
 	_this.slider_position = 0; // Which element's being pointed at. multiply by element_width to get offset, and -1 for movement to left (right button).
 	_this.transition_time = 10;
 	_this.number_of_frames = 40;
@@ -56,9 +56,14 @@ function Carousel(element)
 
 	
 	
+	
+	
+
+	
+
 	_this.slide = function()
 	{		
-		console.log("Target: " + _this.target_position);
+		//console.log("Target: " + _this.target_position);
 		
 		var offset;
 		
@@ -123,29 +128,80 @@ function Carousel(element)
 	
 	//create buttons
 	// Left
-	var left_button = document.createElement("div");
-	left_button.setAttribute("class", "carousel_button_left");
-	left_button.onclick = _this.left_button_action;
+	_this.left_button = document.createElement("div");
+	_this.left_button.setAttribute("class", "carousel_button_left");
+	_this.left_button.onclick = _this.left_button_action;
 	
-	var left_arrow = document.createElement("span");
-	left_arrow.setAttribute("class", "triangle_left");
-	left_button.appendChild(left_arrow);
+	_this.left_arrow = document.createElement("span");
+	_this.left_arrow.setAttribute("class", "triangle_left");
+	_this.left_button.appendChild(_this.left_arrow);
 	
-	_this.reference.appendChild(left_button);
+	_this.reference.appendChild(_this.left_button);
 	
 	
 	
 	// Right
-	var right_button = document.createElement("div");
-	right_button.setAttribute("class", "carousel_button_right");
+	_this.right_button = document.createElement("div");
+	_this.right_button.setAttribute("class", "carousel_button_right");
+	_this.right_button.onclick = _this.right_button_action;
 
-	var right_arrow = document.createElement("span");
-	right_arrow.setAttribute("class", "triangle_right");
-	right_button.appendChild(right_arrow);
+	_this.right_arrow = document.createElement("span");
+	_this.right_arrow.setAttribute("class", "triangle_right");
+	_this.right_button.appendChild(_this.right_arrow);
 
-	right_button.onclick = _this.right_button_action;
-	_this.reference.appendChild(right_button);
+	_this.reference.appendChild(_this.right_button);
 	
+	
+	
+
+	// Request the config file; if we get it, load it up
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", document.URL + "/src/config.json", true);
+	xhr.onreadystatechange = function(data)
+	{
+	    if (xhr.readyState == 4) 
+		{
+			config = JSON.parse(xhr.responseText);
+			
+			console.log(typeof config.button_position !== "undefined");
+			
+			if(typeof config.button_position !== "undefined")
+			{
+				console.log("control was here");
+				
+				switch(config.button_position)
+				{
+					case "outside":
+						console.log("outside");
+						
+						_this.left_button.style.left = "0px";
+						_this.right_button.style.right = "0px";
+						
+						break;
+						
+					case "inside":
+						console.log("inside");
+						
+						_this.left_button.style.left = window.getComputedStyle(_this.left_button).width;
+						_this.right_button.style.right = window.getComputedStyle(_this.right_button).width;
+						
+						break;
+						
+					case "manual":
+						break;
+					default:
+						console.error("Illegal Value, button_position: " + config.button_position);
+						break;	
+				}
+			}
+			
+			
+			
+			
+			
+		}
+	}
+	xhr.send();
 };
 
 
