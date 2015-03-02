@@ -1,39 +1,3 @@
-function add_header()
-{
-    header = document.createElement("h1");
-    header_text = document.createTextNode(document.title);
-    header.appendChild(header_text);
-    document.body.appendChild(header);
-}
-
-function populate_TOC(list_id)
-{
-	document.addEventListener("DOMContentLoaded", function () {
-	
-		var songs = document.getElementsByTagName("h2");
-		var toc = document.getElementById(list_id);
-
-		for (var i = 0; i < songs.length; i++)
-		{
-			if(songs[i].className == "song_title")
-            {
-    			var name = songs[i].innerHTML;
-    			songs[i].setAttribute("id", encodeURIComponent(name));
-		
-    			item = document.createElement("LI");
-    			link = document.createElement("a");
-    			link.setAttribute("href", "#" + encodeURIComponent(name))
-    			link.innerHTML = name;
-			
-    			item.appendChild(link);
-    			toc.appendChild(item);
-            }
-		}
-	
-	}, false);
-}
-
-
 var carousels = [];
 
 function Carousel(element)
