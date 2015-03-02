@@ -48,11 +48,11 @@ function Carousel(element)
 
 	_this.element_width = 600; // Eventually should be automatic - same width as mask, not as elements
 	_this.slider_position = 0; // Which element's being pointed at. multiply by element_width to get offset, and -1 for movement to left (right button).
-	_this.transition_time = 10;
-	_this.number_of_frames = 40;
-	_this.frame_delay = this.transition_time / _this.number_of_frames;
-	_this.offset_width = _this.element_width / _this.number_of_frames;
-	_this.target_position = 0;
+	_this.transition_time = 10; // Default, may be overwritted by config file
+	_this.number_of_frames_per_transition = 40; // Default, may be overwritted by config file
+	_this.frame_delay = this.transition_time / _this.number_of_frames_per_transition;	
+	_this.offset_width = _this.element_width / _this.number_of_frames_per_transition;
+	_this.target_position = 0; // Which element is being, or is intended to be, displayed; changed *before* animation begins; 0 indexed
 
 	
 	
@@ -163,28 +163,20 @@ function Carousel(element)
 		{
 			config = JSON.parse(xhr.responseText);
 			
-			console.log(typeof config.button_position !== "undefined");
 			
 			if(typeof config.button_position !== "undefined")
 			{
-				console.log("control was here");
 				
 				switch(config.button_position)
 				{
-					case "outside":
-						console.log("outside");
-						
+					case "outside":						
 						_this.left_button.style.left = "0px";
 						_this.right_button.style.right = "0px";
-						
 						break;
 						
-					case "inside":
-						console.log("inside");
-						
+					case "inside":						
 						_this.left_button.style.left = window.getComputedStyle(_this.left_button).width;
 						_this.right_button.style.right = window.getComputedStyle(_this.right_button).width;
-						
 						break;
 						
 					case "manual":
@@ -195,10 +187,16 @@ function Carousel(element)
 				}
 			}
 			
-			
-			
-			
-			
+			if(typeof config.transition_time !== "undefined") _this.transition_time = config.transition_time;
+
+
+			if(typeof config.number_of_frames_per_transition !== "undefined") _this.number_of_frames_per_transition = config.number_of_frames_per_transition;
+					
+		
+		
+			// Re-do some calculations from before, in case the default values were overwritten
+			_this.frame_delay = _this.transition_time / _this.number_of_frames_per_transition;
+			_this.offset_width = _this.element_width / _this.number_of_frames_per_transition;	
 		}
 	}
 	xhr.send();
