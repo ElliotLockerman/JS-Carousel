@@ -2,7 +2,7 @@
 {
 	/* Sizes and positions */
     height:630px; /* sum of content heights (generally, slider_element_image + .slider_element_text [offer auto option?])*/
-    width:750px; /*image (+ space for each button, if they're outside [offer auto option?])*/
+    width:750px; /*image (+ space for each button, if they're outside [offer auto option?])
 	
 	padding-bottom:50px;
 	padding-top:20px;
@@ -17,6 +17,12 @@
 	
 }
 
+.carousel_mask
+{ 
+
+    width:600px; /* same as album_cover*/
+
+}
 
 
 .carousel_button_left:hover, .carousel_button_right:hover
