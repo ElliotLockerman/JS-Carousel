@@ -11,7 +11,8 @@
 		- The default setting is equivalent to "outside" in initial position, but unlike the other two settings, it can be overwritten with a theme's CSS.
 - "transition_time"
 	- number, time in milliseconds (default: 10)
-		- total length of time it takes to move from one element to the next
+		- Total length of time it takes to move to target
+		- Time does not depend on number of elements to move across - if you click the button twice, it will move twice as quickly, because it has to move twice as far during the same transition_time
 - number_of_frames_per_transition
 	- number, integer (default: 40)
 		- number of frames between one element and the next
