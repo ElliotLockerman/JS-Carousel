@@ -133,13 +133,11 @@
 	/* height - appears to not be needed?
     height:630px; /* sum of content heights (generally, slider_element_image + .slider_element_text [offer auto option?])*/
     width:750px; /*image (+ space for each button, if they're outside [offer auto option?])
-	
+	*/
 	
 	padding-bottom:50px;
 	padding-top:20px;
 	
-    margin-top:40px;
-    margin-bottom:40px;
     margin-left:auto;
     margin-right:auto;
     
