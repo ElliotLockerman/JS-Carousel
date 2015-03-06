@@ -1,5 +1,5 @@
 {
-    "button_position": "inside",
+    "button_position": "outside",
    
     "number_of_frames_per_transition": 10,
     "transition_time": 40

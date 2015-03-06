@@ -1,16 +1,58 @@
 var carousels = [];
 
-function Carousel(element)
+function Carousel(reference)
 {	
 	var _this = this;
 	
-	_this.reference = element;
+	_this.reference = reference;
 
-	_this.slider = _this.reference.children[0].children[0]; // Eventually, loop through and get by class name
+
+	// Get slider reference
+	for(var child in _this.reference.childNodes)
+	{
+		if(_this.reference.childNodes.hasOwnProperty(child) && 
+			_this.reference.childNodes[child].className === "carousel_mask")
+		{
+			
+			for(var child2 in _this.reference.childNodes[child].childNodes)
+			{	
+						
+				if(_this.reference.childNodes[child].childNodes.hasOwnProperty(child2) && 
+					_this.reference.childNodes[child].childNodes[child2].className === "carousel_slider")
+				{
+					_this.slider = _this.reference.childNodes[child].childNodes[child2];
+				}
+			}
+		}
+	}
+
 	_this.slider_styles = window.getComputedStyle(_this.slider);
-	_this.number_of_elements = this.slider.children.length; // Eventually, loop through and get by class name
 
-	_this.element_width = 600; // Eventually should be automatic - same width as mask, not as elements
+	// Get number of elements
+	_this.number_of_elements = 0;
+	for(var child in _this.slider.childNodes)
+	{
+		if(_this.slider.childNodes.hasOwnProperty(child) && 
+			_this.slider.childNodes[child].className === "slider_element")
+		{
+			_this.number_of_elements++
+		}
+	}
+
+
+	// Get element width
+	for(var child in _this.slider.childNodes)
+	{
+		if(_this.slider.childNodes.hasOwnProperty(child) && 
+			_this.slider.childNodes[child].className === "slider_element")
+		{
+			_this.element_width = px_to_int(window.getComputedStyle(_this.slider.childNodes[child]).width);		
+			break;
+		}
+	}
+	
+	
+	
 	_this.slider_position = 0; // Which element's being pointed at. multiply by element_width to get offset, and -1 for movement to left (right button).
 	_this.transition_time = 10; // Default, may be overwritted by config file
 	_this.number_of_frames_per_transition = 40; // Default, may be overwritted by config file
