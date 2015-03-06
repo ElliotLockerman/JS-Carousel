@@ -141,9 +141,9 @@
 /* Default theme - light */
 .carousel
 {
-	/* Sizes and positions - appears to not be needed?
-    height:630px; /* sum of content heights (generally, slider_element_image + .slider_element_text [offer auto option?])
-    width:750px; /*image (+ space for each button, if they're outside [offer auto option?])*/
+	/* height - appears to not be needed?
+    height:630px; /* sum of content heights (generally, slider_element_image + .slider_element_text [offer auto option?])*/
+    width:750px; /*image (+ space for each button, if they're outside [offer auto option?])
 	
 	
 	padding-bottom:50px;
