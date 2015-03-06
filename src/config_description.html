@@ -17,8 +17,8 @@
 	
 	table
 	{
-		margin-top:40px;
-		margin-bottom:60px;
+		margin-top:100px;
+		margin-left:30px;
 	}
 	
 	caption
@@ -44,13 +44,18 @@
 
 
 
-<table>
-	<caption>"button_position"</caption>
+<table style="margin-top:40px">
+	<caption>Display</caption>
 	<tr>
+		<th>Attribute</th>
 		<th>Values</th>
 		<th>Description</th>
 	</tr>
+	
+	
+	
 	<tr>
+		<td rowspan="2">"button_position"</td>
 		<td>"outside" (default)</td>
 		<td>Buttons are to the left and right of the element</td>
 	</tr>
@@ -58,37 +63,33 @@
 		<td>"overlay"</td>
 		<td>Buttons are laid over the element.</td>
 	</tr>
+	
+
+		
 </table>
 
 
 			
 
 <table>
-	<caption>"transition_time"</caption>
+	<caption>Animation</caption>
 	<tr>
+		<th>Attribute</th>
 		<th>Value</th>
 		<th>Description</th>
 	</tr>
 	<tr>
+		<td>"transition_time"</td>
 		<td>number, time in milliseconds (default: 10)</td>
-		<td>Total length of time it takes to move to target
-		</td>
-	</tr>
-</table>
-
-
-
-<table>
-	<caption>"number_of_frames_per_transition"</caption>
-	<tr>
-		<th>Value</th>
-		<th>Description</th>
+		<td>Total length of time it takes to move to target</td>
 	</tr>
 	<tr>
+		<td>"number_of_frames_per_transition"</td>
 		<td>number, integer (default: 40)</td>
 		<td>number of frames between one element and the next</td>
 	</tr>
 </table>
+
 
 
 
