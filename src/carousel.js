@@ -128,6 +128,8 @@ function Carousel(element)
 			config = JSON.parse(xhr.responseText);
 			
 			
+			
+			
 			if(typeof config.button_position !== "undefined")
 			{
 				
@@ -150,12 +152,23 @@ function Carousel(element)
 						break;	
 				}
 			}
+			else // default
+			{
+				_this.left_button.style.left = "0px";
+				_this.right_button.style.right = "0px";
+			}
+			
+			
+			
+			
 			
 			if(typeof config.transition_time !== "undefined") _this.transition_time = config.transition_time;
 
 
 			if(typeof config.number_of_frames_per_transition !== "undefined") _this.number_of_frames_per_transition = config.number_of_frames_per_transition;
 					
+					
+
 		
 		
 			// Re-do some calculations from before, in case the default values were overwritten
