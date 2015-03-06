@@ -97,12 +97,12 @@
 }
 
 
-.triangle_left, .triangle_right
+.left_symbol, .right_symbol
 {
 	width: 0;
 	height: 0;
 	border-style: solid;
-	opacity:0.1;
+	
 	
 	/* Vertical center */
 	position: relative;
@@ -114,18 +114,6 @@
 	margin-right:auto;
 }
 
-.triangle_left
-{
-	border-width: 40px 40px 40px 0;
-	border-color: transparent #000000 transparent transparent;
-}
-
-
-.triangle_right
-{
-	border-width: 40px 0 40px 40px;
-	border-color: transparent transparent transparent #000000;
-}
 
 /* End vital stuff */
 
@@ -200,5 +188,19 @@
 
 
 
+.left_symbol
+{
+	opacity:0.1;
+	border-width: 40px 40px 40px 0;
+	border-color: transparent #000000 transparent transparent;
+}
+
+
+.right_symbol
+{
+	opacity:0.1;
+	border-width: 40px 0 40px 40px;
+	border-color: transparent transparent transparent #000000;
+}
 
 /* End default theme */

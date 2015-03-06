@@ -139,7 +139,7 @@ function Carousel(reference)
 	_this.left_button.onclick = _this.left_button_action;
 	
 	_this.left_arrow = document.createElement("span");
-	_this.left_arrow.setAttribute("class", "triangle_left");
+	_this.left_arrow.setAttribute("class", "left_symbol");
 	_this.left_button.appendChild(_this.left_arrow);
 	
 	_this.reference.appendChild(_this.left_button);
@@ -152,7 +152,7 @@ function Carousel(reference)
 	_this.right_button.onclick = _this.right_button_action;
 
 	_this.right_arrow = document.createElement("span");
-	_this.right_arrow.setAttribute("class", "triangle_right");
+	_this.right_arrow.setAttribute("class", "right_symbol");
 	_this.right_button.appendChild(_this.right_arrow);
 
 	_this.reference.appendChild(_this.right_button);

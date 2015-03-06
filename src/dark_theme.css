@@ -1,9 +1,3 @@
-body
-{
-	background-color:#292929;
-}
-
-
 .carousel
 {	
 	padding-bottom:50px;
@@ -49,14 +43,17 @@ body
 }
 
 
-.triangle_left
+.left_symbol
 {
+	opacity:0.1;
 	border-width: 40px 40px 40px 0;
 	border-color: transparent #ddd transparent transparent;
 }
 
 
-.triangle_right
+.right_symbol
 {
+	opacity:0.1;
 	border-width: 40px 0 40px 40px;
 	border-color: transparent transparent transparent #ddd;
+}
