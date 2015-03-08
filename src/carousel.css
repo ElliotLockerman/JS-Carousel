@@ -1,8 +1,14 @@
 
-/* Vital stuff */
+/* Vital stuff, theme invariant */
 .carousel /* whole carousel needs to be make javascript-missing failsafe*/
 {
     position:relative; /* Required for button positioning */
+	
+	/* Default for no js. */
+    overflow-x:scroll; 
+	overflow-y:hidden;
+    white-space:nowrap; /* Prevents elemnt divs from stacking vertically */
+	
 	
 	/* Disable selecting divs */
 	-webkit-touch-callout: none;
@@ -16,17 +22,16 @@
 .carousel_button_left, .carousel_button_right
 {
     position:absolute;
+	top:0;
+    height:100%;
 }
 
 
 .carousel_mask
 { 
-    overflow-x:scroll; /* Default for no js. If js, will overwrite with hidden */
-	overflow-y:hidden;
-	
+    overflow:hidden; /* Because its a mask, duh */
+
     white-space:nowrap; /* Prevents elemnt divs from stacking vertically */
-  
-    width:600px; /* same as elements*/
 	
     margin-left:auto;
     margin-right:auto;
@@ -45,23 +50,9 @@
 	vertical-align:top; /* Prevents vertical offest when elements differ in hight */
 	
 	width:100%;
-	height:630px;/* same as carousel*/
+
 }
 
-
-.slider_element_image /* For putting an image in the element */
-{
-	max-width:600px;
-	max-height:600px;
-	display:block;
-	margin-left:auto;
-	margin-right:auto;
-	
-	/* Vertical center */
-	position: relative;
-  	top: 50%;
- 	transform: translateY(-50%);
-}
 
 
 
@@ -100,8 +91,7 @@
 {
 	/* height - appears to not be needed?
     height:630px; /* sum of content heights (generally, slider_element_image + .slider_element_text [offer auto option?])*/
-    width:750px; /*image (+ space for each button, if they're outside [offer auto option?])
-	*/
+    width:750px; /*image (+ space for each button, if they're outside [offer auto option?])*/
 	
 	padding-bottom:50px;
 	padding-top:20px;
@@ -117,30 +107,25 @@
 
 .carousel_mask
 { 
-    width:600px; /* same as album_cover*/
+    width:600px; /* same as element*/
 }
 
 
 .carousel_button_left, .carousel_button_right
 {
-    position:absolute;
-	top:0;
     width:75px;
-    height:100%;/* same as image*/
 }
 
+.slider_element
+{
+	height:630px;/* same as carousel*/
+}
 
 .carousel_button_left:hover, .carousel_button_right:hover
 {
 	background-color:#e7e7e7;
 }
 
-
-.slider_element_image
-{
-	max-width:600px;
-	max-height:600px;
-}
 
 
 

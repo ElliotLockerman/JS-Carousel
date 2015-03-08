@@ -4,56 +4,46 @@ function Carousel(reference)
 {	
 	var _this = this;
 	
-	_this.reference = reference;
+	_this.carousel_main = reference;
 
 
-	// Get slider reference
-	for(var child in _this.reference.childNodes)
+
+	// Get elements array, number of elements, and element width
+	_this.elements = new Array();
+	for(var child in _this.carousel_main.childNodes)
 	{
-		if(_this.reference.childNodes.hasOwnProperty(child) && 
-			_this.reference.childNodes[child].className === "carousel_mask")
+		if(_this.carousel_main.childNodes.hasOwnProperty(child) && 
+			_this.carousel_main.childNodes[child].className === "slider_element")
 		{
-			
-			_this.reference.childNodes[child].style["overflow-x"] = "hidden"; // The default is "scroll", so all the pictures can be seen even without javascript.
-			
-			for(var child2 in _this.reference.childNodes[child].childNodes)
-			{	
-						
-				if(_this.reference.childNodes[child].childNodes.hasOwnProperty(child2) && 
-					_this.reference.childNodes[child].childNodes[child2].className === "carousel_slider")
-				{
-					_this.slider = _this.reference.childNodes[child].childNodes[child2];
-				}
-			}
+			_this.elements.push(_this.carousel_main.childNodes[child]);
 		}
 	}
+	_this.number_of_elements = _this.elements.length;
+
+
+
+	// Create mask and slider
+	_this.mask = document.createElement("div");
+	_this.mask.setAttribute("class", "carousel_mask");
+	_this.carousel_main.appendChild(_this.mask);
+
+	_this.slider = document.createElement("div");
+	_this.slider.setAttribute("class", "carousel_slider");
+	_this.mask.appendChild(_this.slider);
+	
+	// And add elements to slider
+	for(var element in _this.elements)
+	{
+		_this.slider.appendChild(_this.elements[element]);
+	}
+
+
+	// Get some styles
+	_this.element_width = px_to_int(window.getComputedStyle(_this.elements[0]).width);		
 	_this.slider_styles = window.getComputedStyle(_this.slider);
 	
-
-	// Get number of elements
-	_this.number_of_elements = 0;
-	for(var child in _this.slider.childNodes)
-	{
-		if(_this.slider.childNodes.hasOwnProperty(child) && 
-			_this.slider.childNodes[child].className === "slider_element")
-		{
-			_this.number_of_elements++
-		}
-	}
-
-
-	// Get element width
-	for(var child in _this.slider.childNodes)
-	{
-		if(_this.slider.childNodes.hasOwnProperty(child) && 
-			_this.slider.childNodes[child].className === "slider_element")
-		{
-			_this.element_width = px_to_int(window.getComputedStyle(_this.slider.childNodes[child]).width);		
-			break;
-		}
-	}
-	
-	
+	// Overwrite no-js defaults
+	_this.carousel_main.style["overflow-x"] = "auto";
 	
 	_this.slider_position = 0; // Which element's being pointed at. multiply by element_width to get offset, and -1 for movement to left (right button).
 	_this.transition_time = 10; // Default, may be overwritted by config file
@@ -146,7 +136,7 @@ function Carousel(reference)
 	_this.left_arrow.setAttribute("class", "left_symbol");
 	_this.left_button.appendChild(_this.left_arrow);
 	
-	_this.reference.appendChild(_this.left_button);
+	_this.carousel_main.appendChild(_this.left_button);
 	
 	
 	
@@ -159,7 +149,7 @@ function Carousel(reference)
 	_this.right_arrow.setAttribute("class", "right_symbol");
 	_this.right_button.appendChild(_this.right_arrow);
 
-	_this.reference.appendChild(_this.right_button);
+	_this.carousel_main.appendChild(_this.right_button);
 	
 	
 	
