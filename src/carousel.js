@@ -14,7 +14,7 @@ function Carousel(reference)
 			_this.reference.childNodes[child].className === "carousel_mask")
 		{
 			
-			_this.reference.childNodes[child].style["overflow-x"] = "hidden";
+			_this.reference.childNodes[child].style["overflow-x"] = "hidden"; // The default is "scroll", so all the pictures can be seen even without javascript.
 			
 			for(var child2 in _this.reference.childNodes[child].childNodes)
 			{	
@@ -68,7 +68,10 @@ function Carousel(reference)
 	
 
 	
-
+	
+	// Buttons and animation
+	
+	// Moves the slider a small amount each time untill it hits the target, if not, recursively repeats
 	_this.slide = function()
 	{		
 		//console.log("Target: " + _this.target_position);
@@ -97,7 +100,6 @@ function Carousel(reference)
 	
 	_this.left_button_action = function()
 	{		
-		
 		
 		if(_this.slider_position > 0)
 		{
@@ -161,6 +163,11 @@ function Carousel(reference)
 	
 	
 	
+	
+	
+	
+	
+	
 
 	// Request the config file; if we get it, load it up
 	var xhr = new XMLHttpRequest();
@@ -173,7 +180,7 @@ function Carousel(reference)
 			
 			
 			
-			
+			// Place buttons
 			if(typeof config.button_position !== "undefined")
 			{
 				
@@ -205,14 +212,15 @@ function Carousel(reference)
 			
 			
 			
-			
+			// Transition time
 			if(typeof config.transition_time !== "undefined") _this.transition_time = config.transition_time;
 
 
+
+			// Number of frames per transition
 			if(typeof config.number_of_frames_per_transition !== "undefined") _this.number_of_frames_per_transition = config.number_of_frames_per_transition;
 					
 					
-
 		
 		
 			// Re-do some calculations from before, in case the default values were overwritten
@@ -242,7 +250,7 @@ window.addEventListener("load", function()
 
 
 
-
+// Converts css pixel value strings to ints
 function px_to_int(px)
 {
 	if(px.indexOf("%") != -1 || px.indexOf("em") != -1 || px.indexOf("px") == -1)
@@ -255,6 +263,8 @@ function px_to_int(px)
     return parseInt(px,10);
 }
 
+
+// Converts ints to css pixel value strings
 function int_to_px(px)
 {
 	if(typeof px !== "number")

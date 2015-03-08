@@ -2,7 +2,7 @@
 /* Vital stuff */
 .carousel /* whole carousel needs to be make javascript-missing failsafe*/
 {
-    position:relative;
+    position:relative; /* Required for button positioning */
 	
 	/* Disable selecting divs */
 	-webkit-touch-callout: none;
@@ -16,61 +16,38 @@
 .carousel_button_left, .carousel_button_right
 {
     position:absolute;
-	z-index:15;
 }
 
-
-
-
-.carousel_button_left
-{
-    left:0px; /* 0 for outside, same as button width for inside */
-}
-
-.carousel_button_right
-{
-    right:0px; /* 0 for outside, same as button width for inside */
-}
 
 .carousel_mask
 { 
-    position:relative;
-    display:block;
-    overflow-x:scroll;
+    overflow-x:scroll; /* Default for no js. If js, will overwrite with hidden */
 	overflow-y:hidden;
-    white-space:nowrap;
+	
+    white-space:nowrap; /* Prevents elemnt divs from stacking vertically */
+  
     width:600px; /* same as elements*/
+	
     margin-left:auto;
     margin-right:auto;
-	z-index:10;
 }
 
 .carousel_slider
 {
-    position:relative;
+    position:relative; /* Required for positioning and animation */
     left:0px;
 	font-size:0px; /* needed to get rid of space between elements */
-	z-index:5;
-	
-	display:block;
 }
 
 .slider_element
 {
-	display:inline-block;
-	vertical-align:top;
+	display:inline-block; /* Required for positioning */
+	vertical-align:top; /* Prevents vertical offest when elements differ in hight */
+	
 	width:100%;
 	height:630px;/* same as carousel*/
 }
 
-.slider_element_text
-{
-	font-size:20px; 
-	text-align:center;
-	font-weight:bold;
-	padding-bottom:10px;
-	color:#444444;
-}
 
 .slider_element_image /* For putting an image in the element */
 {
@@ -86,16 +63,6 @@
  	transform: translateY(-50%);
 }
 
-
-
-.cell
-{
-	width:399px;
-	height:399px;
-	text-align:center;
-	
-	float:left;
-}
 
 
 .left_symbol, .right_symbol
@@ -160,7 +127,6 @@
 	top:0;
     width:75px;
     height:100%;/* same as image*/
-	z-index:15;
 }
 
 
@@ -177,7 +143,6 @@
 	padding-bottom:10px;
 	color:#aaaaaa;
 }
-
 
 .slider_element_image
 {
