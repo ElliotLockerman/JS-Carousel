@@ -14,6 +14,8 @@ function Carousel(reference)
 			_this.reference.childNodes[child].className === "carousel_mask")
 		{
 			
+			_this.reference.childNodes[child].style["overflow-x"] = "hidden";
+			
 			for(var child2 in _this.reference.childNodes[child].childNodes)
 			{	
 						
@@ -25,8 +27,8 @@ function Carousel(reference)
 			}
 		}
 	}
-
 	_this.slider_styles = window.getComputedStyle(_this.slider);
+	
 
 	// Get number of elements
 	_this.number_of_elements = 0;

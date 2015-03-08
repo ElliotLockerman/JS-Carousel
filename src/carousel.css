@@ -36,7 +36,8 @@
 { 
     position:relative;
     display:block;
-    overflow:hidden;
+    overflow-x:scroll;
+	overflow-y:hidden;
     white-space:nowrap;
     width:600px; /* same as elements*/
     margin-left:auto;
