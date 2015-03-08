@@ -18,6 +18,7 @@ body
 	margin-top:20px;
 
 	background-color:#222222;
+	color:#aaaaaa;
 	width:90%;
 	
     /*box-shadow: 2px 2px 3px #d8d8d8;*/
@@ -25,14 +26,17 @@ body
     font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif;
 }
 
+
 h1
 {
+	font-size:20px; 
 	text-align:center;
-	padding-top:20px;
-    font-size:50px;
+	font-weight:bold;
+	padding-bottom:10px;
+	
 }
 
-h2, .cell
+h2
 {
 	font-size:1.5em;
 	font-weight:bold;
