@@ -1,6 +1,4 @@
 {
-    "button_position": "outside",
-   
     "number_of_frames_per_transition": 20,
     "transition_time": 100
 }

@@ -1,10 +1,8 @@
 .carousel
 {	
-    width:750px; /*image (+ space for each button, if they're outside [offer auto option?]) */
+    width:600px; 
+	height:700px;
 	
-	
-	padding-bottom:50px;
-	padding-top:20px;
 	
     margin-left:auto;
     margin-right:auto;
@@ -14,21 +12,24 @@
 	
 }
 
-.carousel_mask
-{ 
-
-    width:600px; /* same as element width*/
-
-}
-
-.slider_element
+.element_image
 {
-	height:630px;/* same as carousel*/
+	max-width:600px;
+	max-height:600px;
+	
+	margin-left:auto;
+	margin-right:auto;
+	
+	/* Vertical center */
+	display:block;
+	position: relative;
+  	top: 50%;
+ 	transform: translateY(-50%);
 }
 
 .carousel_button_left:hover, .carousel_button_right:hover
 {
-	background-color:#1e1e1e;
+	background-color:rgba(50,50,50,0.2);
 }
 
 

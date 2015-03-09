@@ -37,6 +37,8 @@ function Carousel(reference)
 		_this.slider.appendChild(_this.elements[element]);
 	}
 
+	
+	// Calculate and set element's heights 
 
 	// Get some styles
 	_this.element_width = px_to_int(window.getComputedStyle(_this.elements[0]).width);		
@@ -167,39 +169,6 @@ function Carousel(reference)
 	    if (xhr.readyState == 4) 
 		{
 			config = JSON.parse(xhr.responseText);
-			
-			
-			
-			// Place buttons
-			if(typeof config.button_position !== "undefined")
-			{
-				
-				switch(config.button_position)
-				{
-					case "outside":						
-						_this.left_button.style.left = "0px";
-						_this.right_button.style.right = "0px";
-						break;
-						
-					case "inside":						
-						_this.left_button.style.left = window.getComputedStyle(_this.left_button).width;
-						_this.right_button.style.right = window.getComputedStyle(_this.right_button).width;
-						break;
-						
-					case "manual":
-						break;
-					default:
-						console.error("Illegal Value, button_position: " + config.button_position);
-						break;	
-				}
-			}
-			else // default
-			{
-				_this.left_button.style.left = "0px";
-				_this.right_button.style.right = "0px";
-			}
-			
-			
 			
 			
 			// Transition time
