@@ -58,7 +58,7 @@ function Carousel(reference)
 	xhr.send();
 	
 	
-	// Get all the thumbs
+	// Get all the thumbs 
 	self.thumbs = new Array();
 	for (var child in self.carousel_main.childNodes)
 	{	
@@ -110,11 +110,11 @@ function Carousel(reference)
 	
 	 
 	// Create objects which do the rest
-	var sub_carousels
+	self.sub_carousels = new Array();
 	self.primary_carousel = new Sub_carousel(self, self.primary_wrapper, "primary_", 1);
-	sub_carousels.push(self.primary_carousel);
+	self.sub_carousels.push(self.primary_carousel);
 	self.thumb_carousel = new Sub_carousel(self, self.thumb_wrapper, "thumb_", "auto");
-	sub_carousels.push(self.thumb_carousel);
+	self.sub_carousels.push(self.thumb_carousel);
 
 
 
@@ -124,89 +124,98 @@ function Carousel(reference)
 	function Sub_carousel(outer_object, outer_div, prefix, elements_per_frame)
 	{
 
-		self.slider_position = 0; // Which element's being pointed at. multiply by element_width to get offset, and -1 for movement to left (right button).
+		console.log("new object: " + prefix);
 
 
 
-		// Get elements array, number of elements, and element width
-		self.elements = new Array();
+
+
+
+
+
+
+
+		// Get list of element contents (needs to be before mask and slider to avoid including them)
+		var elements_content = new Array()
 		for(var child in outer_div.childNodes)
 		{
-			if(self.carousel_main.childNodes.hasOwnProperty(child) && 
-				self.carousel_main.childNodes[child].className === prefix + "image")
-			{
-				self.elements.push(self.carousel_main.childNodes[child]);
+			
+			if(outer_div.childNodes.hasOwnProperty(child) && 
+				outer_div.childNodes[child].nodeType === 1)
+			{			
+				elements_content.push(outer_div.childNodes[child]);
 			}
 		}
-		self.number_of_elements = self.elements.length;
-
-	
+		
+		
 	
 
 		// Create mask and slider
-		self.mask = document.createElement("div");
-		self.mask.setAttribute("class", prefix + "mask");
-		self.outer_div.appendChild(self.mask);
+		var mask = document.createElement("div");
+		mask.setAttribute("class", prefix + "mask");
+		outer_div.appendChild(mask);
 
 		self.slider = document.createElement("div");
 		self.slider.setAttribute("class", prefix + "slider");
-		self.outer_div.appendChild(self.slider);
+		mask.appendChild(self.slider);
 	
-	
-	
-	
-		// Add images to slide
-		for(var index in self.elements)
+		
+		
+		// Wrap images in elements and add to slider
+		for(var child in elements_content)
 		{
-			self.slider.appendChild(self.elements[index]);
+			
+			var element = document.createElement("div")
+			element.setAttribute("class", prefix + "slider_element")
+			element.appendChild(elements_content[child]);
+			
+			self.slider.appendChild(element);
+			
 		}
+		
 
+		
 	
 		// Calculate and set element's heights 
 
 		// Get some styles
-		self.element_width = px_to_int(window.getComputedStyle(self.elements[0]).width);		
+		//self.element_width = px_to_int(window.getComputedStyle(self.elements[0]).width);		
 		self.slider_styles = window.getComputedStyle(self.slider);
 	
-		// Overwrite no-js defaults
-		self.carousel_main.style["overflow-x"] = "auto";
-	
-	
-
+		self.slider_position = 0; // Which element's being pointed at. multiply by element_width to get offset, and -1 for movement to left (right button).
 		self.frame_delay = this.transition_time / self.number_of_frames_per_transition;	
-		self.offset_width = self.element_width / self.number_of_frames_per_transition;
+		self.offset_width = (self.element_width * elements_per_frame) / self.number_of_frames_per_transition;
 		self.target_position = 0; // Which element is being, or is intended to be, displayed; changed *before* animation begins; 0 indexed
 	
 	
 	
 	
-	
-	
+
 	
 		//create buttons
 		// Left
-		self.left_button = document.createElement("div");
-		self.left_button.setAttribute("class", "carousel_button_left");
-		self.left_button.onclick = self.left_button_action;
+		var left_button = document.createElement("div");
+		left_button.setAttribute("class", prefix + "button_left");
+		left_button.onclick = self.left_button_action;
 	
-		self.left_arrow = document.createElement("span");
-		self.left_arrow.setAttribute("class", "left_symbol");
-		self.left_button.appendChild(self.left_arrow);
+		var left_arrow = document.createElement("span");
+		left_arrow.setAttribute("class", prefix + "left_symbol");
+		left_button.appendChild(left_arrow);
 	
-		self.carousel_main.appendChild(self.left_button);
+		outer_div.appendChild(left_button);
 	
 	
 	
 		// Right
-		self.right_button = document.createElement("div");
-		self.right_button.setAttribute("class", "carousel_button_right");
-		self.right_button.onclick = self.right_button_action;
+		var right_button = document.createElement("div");
+		right_button.setAttribute("class", prefix + "button_right");
+		right_button.onclick = self.right_button_action;
 
-		self.right_arrow = document.createElement("span");
-		self.right_arrow.setAttribute("class", "right_symbol");
-		self.right_button.appendChild(self.right_arrow);
+		right_arrow = document.createElement("span");
+		right_arrow.setAttribute("class", prefix + "right_symbol");
+		right_button.appendChild(right_arrow);
 
-		self.carousel_main.appendChild(self.right_button);
+		outer_div.appendChild(right_button);
 	
 	
 	
