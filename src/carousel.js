@@ -120,15 +120,24 @@ function Carousel(reference)
 	}
 
 	
+	self.Sub_carousel_enum = Object.freeze
+	({
+		PRIMARY: "primary",
+		THUMB: "thumb"
+	})
+	
 	
 	// Create sub-carousel objects which do the rest
 	self.sub_carousels = new Array();
 	
-	self.primary_carousel = new Sub_carousel(self, self.primary_wrapper, "primary", 1);
+	self.primary_carousel = new Sub_carousel(self, self.primary_wrapper, self.Sub_carousel_enum.PRIMARY, 1);
 	self.sub_carousels.push(self.primary_carousel);
 	
-	self.thumb_carousel = new Sub_carousel(self, self.thumb_wrapper, "thumb", "auto");
+	self.thumb_carousel = new Sub_carousel(self, self.thumb_wrapper, self.Sub_carousel_enum.THUMB, "auto");
 	self.sub_carousels.push(self.thumb_carousel);
+
+
+	
 
 
 
@@ -136,7 +145,7 @@ function Carousel(reference)
 
 	self.animate_sibling = function(event, caller, index)
 	{
-		if(caller === "thumb")
+		if(caller === self.Sub_carousel_enum.THUMB)
 		{
 			self.primary_carousel.animate_to_index(index);
 		}
@@ -148,9 +157,10 @@ function Carousel(reference)
 
 
 
-	function Sub_carousel(outer_object, outer_div, name, frame_size)
+	function Sub_carousel(outer_object, outer_div, name)
 	{
 		var self = this;
+
 
 
 		// Get list of element contents (needs to be before mask and slider to avoid including them)
@@ -213,9 +223,9 @@ function Carousel(reference)
 		self.slider_position = 0; // Which element's being pointed at. multiply by element_width to get offset, and -1 for movement to left (right button).
 		self.target_position = 0; // Which element is being, or is intended to be, displayed; changed *before* animation begins; 0 indexed
 		
-		
+		self.frame_size = Math.floor(px_to_int(self.slider_styles.width) / self.element_width)// Number of elements on display at once
 
-		
+
 		
 
 	
@@ -254,38 +264,42 @@ function Carousel(reference)
 			if(index < 0 || index > self.number_of_elements) return;
 			self.target_position = self.element_width * index * -1;
 			self.slider_position = index;
+			console.log("Index: " + index);
 			self.slide();
 		};
 	
 		self.left_button_action = function()
 		{		
-			if(self.slider_position > 0)
+			var index = 0;
+			
+			if(self.slider_position > 0) // Normal move
 			{
-				self.slider_position--;
-				self.animate_to_index(self.slider_position);
+				index = self.slider_position - self.frame_size;
+				if(index < 0) index = 0;
 			}
-			else if (self.slider_position == 0)
+			else if (self.slider_position == 0)  // Moving past the end loops
 			{		
-				self.slider_position = self.number_of_elements - 1;
-				self.animate_to_index(self.slider_position);
+				index = self.number_of_elements - self.frame_size;
 			}
+			
+			self.animate_to_index(index);
 		};
 	
 		self.right_button_action = function()
 		{					
-
-			if(self.slider_position < self.number_of_elements - 1)
-			{
-				self.slider_position++;
-				self.animate_to_index(self.slider_position);
-			}
-			else if (self.slider_position == self.number_of_elements - 1)
-			{
+			var index = 0;
 			
-				self.slider_position = 0;
-				self.animate_to_index(self.slider_position);
-				
+			if(self.slider_position < self.number_of_elements - self.frame_size) // Normal move
+			{
+				index = self.slider_position + self.frame_size;
+				if(index >= self.number_of_elements - self.frame_size) index = self.number_of_elements - self.frame_size;
 			}
+			else if (self.slider_position >= self.number_of_elements - self.frame_size) // Moving past the end loops
+			{
+				index = 0;
+			}
+			
+			self.animate_to_index(index);
 		};
 
 	
