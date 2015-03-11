@@ -90,9 +90,15 @@ function Carousel(reference)
 		{
 			var new_img = document.createElement("img");
 			new_img.setAttribute("src", link_node.href);
-			link_node.href="javascript:;"; // The javascript will handle the clicks	
 			new_img.setAttribute("class", "primary_image");
-			self.primary_wrapper.appendChild(new_img);			
+			self.primary_wrapper.appendChild(new_img);	
+
+			// Delete the thumb's link now that its no longer neeed
+			var image = get_sub_node(link_node, "IMG")
+			var parent = link_node.parentNode
+			parent.appendChild(image);
+			parent.removeChild(link_node);
+					
 		}
 		else
 		{
@@ -116,9 +122,12 @@ function Carousel(reference)
 
 
 
-	self.animate_sibling = function(caller, index)
+	self.animate_sibling = function(event, caller, index)
 	{
-
+		if(caller === "thumb")
+		{
+			self.primary_carousel.animate_to_index(index);
+		}
 	}
 
 
@@ -133,7 +142,7 @@ function Carousel(reference)
 
 
 		// Get list of element contents (needs to be before mask and slider to avoid including them)
-		var elements_content = new Array()
+		self.elements_content = new Array()
 		self.number_of_elements = 0;
 		for(var child in outer_div.childNodes)
 		{
@@ -141,7 +150,7 @@ function Carousel(reference)
 			if(outer_div.childNodes.hasOwnProperty(child) && 
 				outer_div.childNodes[child].nodeType === 1)
 			{			
-				elements_content.push(outer_div.childNodes[child]);
+				self.elements_content.push(outer_div.childNodes[child]);
 				self.number_of_elements++;
 			}
 		}
@@ -163,16 +172,15 @@ function Carousel(reference)
 		
 		// Wrap images in element divs and add to slider
 		self.elements = new Array();
-		for(var child in elements_content)
+		for(var child in self.elements_content)
 		{			
 			var element = document.createElement("div");
 			element.setAttribute("class", name + "_"  + "slider_element");
 			element.onclick = function(event)
 			{
-				console.log(event.target);
-				outer_object.animate_sibling(event, name, self.elements.indexOf(event.target));
+				outer_object.animate_sibling(event, name, self.elements_content.indexOf(event.target));
 			}
-			element.appendChild(elements_content[child]);
+			element.appendChild(self.elements_content[child]);
 			self.elements.push(element);
 			
 			self.slider.appendChild(element);	
@@ -227,7 +235,9 @@ function Carousel(reference)
 	
 		self.animate_to_index = function(index)
 		{
-			
+			self.target_position = self.element_width * index * -1;
+			self.slider_position = index;
+			self.slide();
 		}
 	
 		self.left_button_action = function()
@@ -318,13 +328,13 @@ function Carousel(reference)
 // Functions
 
 
-// Checks if a DOM node or any of its children (recursively) has a certain tag
+// Returns the first DOM node (it or its children [recursively]) that has a certain tag
 function get_sub_node(root, node_name)
 {
 	
 	if(root.nodeName === node_name) return root;
 	else{
-		for (child in root.childNodes)
+		for (var child in root.childNodes)
 		{
 			if(root.childNodes[child].nodeType === 1) // If its a DOM node
 			{
