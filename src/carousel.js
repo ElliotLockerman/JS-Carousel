@@ -72,7 +72,7 @@ function Carousel(reference)
 		
 	}
 	
-	
+
 	
 	// Wrap the thumbs
 	self.thumb_wrapper = document.createElement("div"); 
@@ -118,17 +118,16 @@ function Carousel(reference)
 			}
 		}
 	}
-	
-	
+
 	
 	
 	// Create sub-carousel objects which do the rest
 	self.sub_carousels = new Array();
 	
-	self.primary_carousel = new Sub_carousel(self, self.primary_wrapper, "primary");
+	self.primary_carousel = new Sub_carousel(self, self.primary_wrapper, "primary", 1);
 	self.sub_carousels.push(self.primary_carousel);
 	
-	self.thumb_carousel = new Sub_carousel(self, self.thumb_wrapper, "thumb");
+	self.thumb_carousel = new Sub_carousel(self, self.thumb_wrapper, "thumb", "auto");
 	self.sub_carousels.push(self.thumb_carousel);
 
 
@@ -149,7 +148,7 @@ function Carousel(reference)
 
 
 
-	function Sub_carousel(outer_object, outer_div, name)
+	function Sub_carousel(outer_object, outer_div, name, frame_size)
 	{
 		var self = this;
 
@@ -227,7 +226,8 @@ function Carousel(reference)
 		// Moves the slider a small amount each time untill it hits the target, if not, recursively repeats
 		self.slide = function()
 		{		
-			console.log("Target: " + self.target_position);
+			//console.log("Position: " + self.slider_styles.left);
+			//console.log("Target: " + self.target_position);
 		
 			var offset;
 		
@@ -242,7 +242,6 @@ function Carousel(reference)
 		
 			if(px_to_int(self.slider_styles.left) != self.target_position)
 			{
-				//console.log("Position: " + self.slider_styles.left);
 			
 				self.slider.style.left = int_to_px(px_to_int(self.slider_styles.left) + offset);
 			
@@ -256,22 +255,19 @@ function Carousel(reference)
 			self.target_position = self.element_width * index * -1;
 			self.slider_position = index;
 			self.slide();
-		}
+		};
 	
 		self.left_button_action = function()
 		{		
-		
 			if(self.slider_position > 0)
 			{
-				self.target_position = (self.slider_position * self.element_width * -1) + self.element_width;
 				self.slider_position--;
-				self.slide();
+				self.animate_to_index(self.slider_position);
 			}
 			else if (self.slider_position == 0)
 			{		
-				self.target_position = self.element_width * (self.number_of_elements - 1) * -1;
 				self.slider_position = self.number_of_elements - 1;
-				self.slide();
+				self.animate_to_index(self.slider_position);
 			}
 		};
 	
@@ -280,16 +276,15 @@ function Carousel(reference)
 
 			if(self.slider_position < self.number_of_elements - 1)
 			{
-				self.target_position = (self.slider_position * self.element_width * -1) - self.element_width;
 				self.slider_position++;
-				self.slide();
+				self.animate_to_index(self.slider_position);
 			}
 			else if (self.slider_position == self.number_of_elements - 1)
 			{
 			
-				self.target_position = 0;
 				self.slider_position = 0;
-				self.slide();
+				self.animate_to_index(self.slider_position);
+				
 			}
 		};
 
