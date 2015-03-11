@@ -14,58 +14,62 @@
 	user-select: none;
 }
 
-.primary_carousel_button_left, .primary_carousel_button_right
+.primary_wrapper, .thumb_wrapper
+{
+	position:relative;
+}
+
+.primary_button_left, .primary_button_right, .thumb_button_left, .thumb_button_right
 {
     position:absolute;
 	top:0;
     height:100%;
 }
 
-.primary_carousel_button_left
+.primary_button_left, .thumb_button_left
 {
 	left:0px;
 }
 
-.primary_carousel_button_right
+.primary_button_right, .thumb_button_right
 {
 	right:0px;
 }
 
-.primary_mask, thumb_mask
+.primary_mask, .thumb_mask
 { 
 	width:100%;
 	height:100%;
     overflow:hidden; /* Because its a mask, duh */
-
-    white-space:nowrap; /* Prevents elemnt divs from stacking vertically */
 	
     margin-left:auto;
     margin-right:auto;
 }
 
-.primary_slider, thumb_slider
+
+.primary_slider, .thumb_slider
 {
-    overflow:hidden; 
     white-space:nowrap; 
-	
+		
     position:relative; /* Required for positioning and animation */
     left:0px;
 	font-size:0px; /* needed to get rid of space between elements */
 }
 
-.primary_slider_element
+.primary_slider_element, .thumb_slider_element
 {
 	display:inline-block; /* Required for positioning */
 	vertical-align:top; /* Prevents vertical offest when elements differ in hight */
-	
-	width:100%;
+}
 
+.primary_slider_element
+{
+	width:100%;
 }
 
 
 
-
-.primary_left_symbol, .primary_right_symbol
+.primary_left_symbol, .primary_right_symbol, .thumb_left_symbol, .thumb_right_symbol
 {
 	width: 0;
 	height: 0;
@@ -111,17 +115,24 @@
 }
 
 
-.primary_carousel_button_left, .primary_carousel_button_right
+
+.primary_button_left, .primary_button_right
 {
     width:75px;
 }
+
+.thumb_button_left, .thumb_button_right
+{
+    width:30px;
+}
+
 
 .primary_slider_element
 {
 	height:630px;/* same as carousel*/
 }
 
-.primary_carousel_button_left:hover, .primary_carousel_button_right:hover
+.primary_button_left:hover, .primary_button_right:hover, .thumb_button_left:hover, .thumb_button_right:hover
 {
 	background-color:rgba(225,225,225,0.2);
 }
@@ -153,6 +164,21 @@
 {
 	opacity:0.1;
 	border-width: 40px 0 40px 40px;
+	border-color: transparent transparent transparent #000000;
+}
+
+.thumb_left_symbol
+{
+	opacity:0.1;
+	border-width: 20px 20px 20px 0;
+	border-color: transparent #000000 transparent transparent;
+}
+
+
+.thumb_right_symbol
+{
+	opacity:0.1;
+	border-width: 20px 0 20px 20px;
 	border-color: transparent transparent transparent #000000;
 }
 

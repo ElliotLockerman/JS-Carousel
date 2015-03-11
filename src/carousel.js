@@ -1,28 +1,23 @@
+"use strict";
 
 
-// Checks if a DOM node or any of its children (recursively) has a certain class
-function get_sub_node(root, node_name)
+// Initialize carousels
+var carousels = [];
+window.addEventListener("load", function()
 {
+	var divs = document.getElementsByTagName("div");
 	
-	if(root.nodeName === node_name) return root;
-	else{
-		for (child in root.childNodes)
-		{
-			if(root.childNodes[child].nodeType === 1) // If its a DOM node
-			{
-				return get_sub_node(root.childNodes[child], node_name)
-			}
+	for (var i = 0; i < divs.length; i++)
+	{
+		if (divs[i].className === "carousel")
+		{		
+			carousels.push(new Carousel(divs[i]));			
 		}
 	}
-	
-	return false;
-}
+
+}, false);
 
 
-
-
-
-var carousels = [];
 
 function Carousel(reference)
 {	
@@ -77,7 +72,7 @@ function Carousel(reference)
 	self.thumb_wrapper.setAttribute("class", "thumb_wrapper");
 	self.carousel_main.appendChild(self.thumb_wrapper);
 	
-	for(thumb in self.thumbs)
+	for(var thumb in self.thumbs)
 	{
 		self.thumb_wrapper.appendChild(self.thumbs[thumb]);
 	}
@@ -90,11 +85,12 @@ function Carousel(reference)
 	
 	for(thumb in self.thumbs)
 	{
-		link_node = get_sub_node(self.thumbs[thumb], "A")
+		var link_node = get_sub_node(self.thumbs[thumb], "A")
 		if(link_node)
 		{
 			var new_img = document.createElement("img");
 			new_img.setAttribute("src", link_node.href);
+			link_node.href="javascript: void(0);"; // The javascript will handle the clicks	
 			new_img.setAttribute("class", "primary_image");
 			self.primary_wrapper.appendChild(new_img);			
 		}
@@ -107,36 +103,43 @@ function Carousel(reference)
 	
 	
 	
-	
-	 
-	// Create objects which do the rest
+	// Create sub-carousel objects which do the rest
 	self.sub_carousels = new Array();
-	self.primary_carousel = new Sub_carousel(self, self.primary_wrapper, "primary_", 1);
+	
+	self.primary_carousel = new Sub_carousel(self, self.primary_wrapper, "primary_");
 	self.sub_carousels.push(self.primary_carousel);
-	self.thumb_carousel = new Sub_carousel(self, self.thumb_wrapper, "thumb_", "auto");
+	
+	self.thumb_carousel = new Sub_carousel(self, self.thumb_wrapper, "thumb_");
 	self.sub_carousels.push(self.thumb_carousel);
 
 
 
 
 
-
-	function Sub_carousel(outer_object, outer_div, prefix, elements_per_frame)
+	self.thumb_carousel.animate_sibling = function()
 	{
-
-		console.log("new object: " + prefix);
-
-
+		
+	}
 
 
 
 
 
 
+
+
+
+
+
+
+	function Sub_carousel(outer_object, outer_div, prefix)
+	{
+		var self = this;
 
 
 		// Get list of element contents (needs to be before mask and slider to avoid including them)
 		var elements_content = new Array()
+		self.number_of_elements = 0;
 		for(var child in outer_div.childNodes)
 		{
 			
@@ -144,6 +147,7 @@ function Carousel(reference)
 				outer_div.childNodes[child].nodeType === 1)
 			{			
 				elements_content.push(outer_div.childNodes[child]);
+				self.number_of_elements++;
 			}
 		}
 		
@@ -159,81 +163,46 @@ function Carousel(reference)
 		self.slider.setAttribute("class", prefix + "slider");
 		mask.appendChild(self.slider);
 	
+	
 		
 		
-		// Wrap images in elements and add to slider
+		// Wrap images in element divs and add to slider
+		var element; // Going to use later to get width (they're all the same)
 		for(var child in elements_content)
-		{
-			
-			var element = document.createElement("div")
-			element.setAttribute("class", prefix + "slider_element")
+		{			
+			element = document.createElement("div");
+			element.setAttribute("class", prefix + "slider_element");
 			element.appendChild(elements_content[child]);
 			
-			self.slider.appendChild(element);
-			
+			self.slider.appendChild(element);	
 		}
 		
 
-		
-	
-		// Calculate and set element's heights 
+		// Get some numbers, do some calculations
 
-		// Get some styles
-		//self.element_width = px_to_int(window.getComputedStyle(self.elements[0]).width);		
 		self.slider_styles = window.getComputedStyle(self.slider);
-	
+
+		self.element_width = element.offsetWidth;
+		self.offset_width = self.element_width / outer_object.number_of_frames_per_transition;
+		self.frame_delay = outer_object.transition_time / outer_object.number_of_frames_per_transition;	
+
 		self.slider_position = 0; // Which element's being pointed at. multiply by element_width to get offset, and -1 for movement to left (right button).
-		self.frame_delay = this.transition_time / self.number_of_frames_per_transition;	
-		self.offset_width = (self.element_width * elements_per_frame) / self.number_of_frames_per_transition;
 		self.target_position = 0; // Which element is being, or is intended to be, displayed; changed *before* animation begins; 0 indexed
-	
-	
-	
-	
+		
+		
 
-	
-		//create buttons
-		// Left
-		var left_button = document.createElement("div");
-		left_button.setAttribute("class", prefix + "button_left");
-		left_button.onclick = self.left_button_action;
-	
-		var left_arrow = document.createElement("span");
-		left_arrow.setAttribute("class", prefix + "left_symbol");
-		left_button.appendChild(left_arrow);
-	
-		outer_div.appendChild(left_button);
-	
-	
-	
-		// Right
-		var right_button = document.createElement("div");
-		right_button.setAttribute("class", prefix + "button_right");
-		right_button.onclick = self.right_button_action;
-
-		right_arrow = document.createElement("span");
-		right_arrow.setAttribute("class", prefix + "right_symbol");
-		right_button.appendChild(right_arrow);
-
-		outer_div.appendChild(right_button);
-	
-	
-	
-	
-	
+		
+		
 
 	
 	
 	
-	
-	
-	
-		// Functions
+		// Button and Movement Functions
 		
 		// Moves the slider a small amount each time untill it hits the target, if not, recursively repeats
 		self.slide = function()
 		{		
-			//console.log("Target: " + self.target_position);
+			console.log("Target: " + self.target_position);
 		
 			var offset;
 		
@@ -252,7 +221,7 @@ function Carousel(reference)
 			
 				self.slider.style.left = int_to_px(px_to_int(self.slider_styles.left) + offset);
 			
-				setTimeout(function(){self.slide(slider)}, self.frame_delay);
+				setTimeout(function(){self.slide()}, self.frame_delay);
 			}
 		}
 	
@@ -275,12 +244,10 @@ function Carousel(reference)
 		};
 	
 		self.right_button_action = function()
-		{			
-			console.log(caller);
-		
+		{					
+
 			if(self.slider_position < self.number_of_elements - 1)
 			{
-			
 				self.target_position = (self.slider_position * self.element_width * -1) - self.element_width;
 				self.slider_position++;
 				self.slide();
@@ -296,6 +263,32 @@ function Carousel(reference)
 
 	
 
+		//create buttons
+		// Left
+		var left_button = document.createElement("div");
+		left_button.setAttribute("class", prefix + "button_left");
+		left_button.onclick = self.left_button_action;
+	
+		var left_arrow = document.createElement("span");
+		left_arrow.setAttribute("class", prefix + "left_symbol");
+		left_button.appendChild(left_arrow);
+	
+		outer_div.appendChild(left_button);
+	
+	
+	
+		// Right
+		var right_button = document.createElement("div");
+		right_button.setAttribute("class", prefix + "button_right");
+		right_button.onclick = self.right_button_action;
+
+		var right_arrow = document.createElement("span");
+		right_arrow.setAttribute("class", prefix + "right_symbol");
+		right_button.appendChild(right_arrow);
+
+		outer_div.appendChild(right_button);
+	
+	
 	
 	
 	};
@@ -312,22 +305,32 @@ function Carousel(reference)
 
 
 
-// Initialize carousels
-window.addEventListener("load", function()
+
+
+
+
+
+
+// Functions
+
+
+// Checks if a DOM node or any of its children (recursively) has a certain tag
+function get_sub_node(root, node_name)
 {
-	divs = document.getElementsByTagName("div");
 	
-	for (var i = 0; i < divs.length; i++)
-	{
-		if (divs[i].className === "carousel")
-		{		
-			carousels.push(new Carousel(divs[i]));			
+	if(root.nodeName === node_name) return root;
+	else{
+		for (child in root.childNodes)
+		{
+			if(root.childNodes[child].nodeType === 1) // If its a DOM node
+			{
+				return get_sub_node(root.childNodes[child], node_name)
+			}
 		}
 	}
-
-}, false);
-
-
+	
+	return false;
+}
 
 
 
@@ -338,7 +341,7 @@ function has_sub_node_class(root, class_name)
 	
 	if(root.className.indexOf(class_name) !== -1) return true;
 	else{
-		for (child in root.childNodes)
+		for (var child in root.childNodes)
 		{
 
 			if(root.childNodes[child].nodeType === 1 && has_sub_node_class(root.childNodes[child], class_name))  // If its a DOM node and it or one of its children has the right class
