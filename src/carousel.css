@@ -102,7 +102,7 @@
 /* Default theme - light */
 .carousel
 {
-    width:800px;
+    width:1000px;
 	height:700px;
 	
     margin-left:auto;
@@ -115,6 +115,10 @@
 }
 
 
+.thumb_mask
+{
+	width:940px;
+}
 
 .primary_button_left, .primary_button_right
 {
@@ -139,7 +143,7 @@
 
 .primary_image
 {
-	max-width:800px;
+	max-width:1000px;
 	max-height:600px;
 	
 	margin-left:auto;

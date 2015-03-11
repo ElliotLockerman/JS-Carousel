@@ -90,7 +90,7 @@ function Carousel(reference)
 		{
 			var new_img = document.createElement("img");
 			new_img.setAttribute("src", link_node.href);
-			link_node.href="javascript: void(0);"; // The javascript will handle the clicks	
+			link_node.href="javascript:;"; // The javascript will handle the clicks	
 			new_img.setAttribute("class", "primary_image");
 			self.primary_wrapper.appendChild(new_img);			
 		}
@@ -106,19 +106,19 @@ function Carousel(reference)
 	// Create sub-carousel objects which do the rest
 	self.sub_carousels = new Array();
 	
-	self.primary_carousel = new Sub_carousel(self, self.primary_wrapper, "primary_");
+	self.primary_carousel = new Sub_carousel(self, self.primary_wrapper, "primary");
 	self.sub_carousels.push(self.primary_carousel);
 	
-	self.thumb_carousel = new Sub_carousel(self, self.thumb_wrapper, "thumb_");
+	self.thumb_carousel = new Sub_carousel(self, self.thumb_wrapper, "thumb");
 	self.sub_carousels.push(self.thumb_carousel);
 
 
 
 
 
-	self.thumb_carousel.animate_sibling = function()
+	self.animate_sibling = function(caller, index)
 	{
-		
+
 	}
 
 
@@ -127,12 +127,7 @@ function Carousel(reference)
 
 
 
-
-
-
-
-
-	function Sub_carousel(outer_object, outer_div, prefix)
+	function Sub_carousel(outer_object, outer_div, name)
 	{
 		var self = this;
 
@@ -156,33 +151,38 @@ function Carousel(reference)
 
 		// Create mask and slider
 		var mask = document.createElement("div");
-		mask.setAttribute("class", prefix + "mask");
+		mask.setAttribute("class", name + "_"  + "mask");
 		outer_div.appendChild(mask);
 
 		self.slider = document.createElement("div");
-		self.slider.setAttribute("class", prefix + "slider");
+		self.slider.setAttribute("class", name + "_"  + "slider");
 		mask.appendChild(self.slider);
 	
 	
 		
 		
 		// Wrap images in element divs and add to slider
-		var element; // Going to use later to get width (they're all the same)
+		self.elements = new Array();
 		for(var child in elements_content)
 		{			
-			element = document.createElement("div");
-			element.setAttribute("class", prefix + "slider_element");
+			var element = document.createElement("div");
+			element.setAttribute("class", name + "_"  + "slider_element");
+			element.onclick = function(event)
+			{
+				console.log(event.target);
+				outer_object.animate_sibling(event, name, self.elements.indexOf(event.target));
+			}
 			element.appendChild(elements_content[child]);
+			self.elements.push(element);
 			
 			self.slider.appendChild(element);	
 		}
-		
 
 		// Get some numbers, do some calculations
 
 		self.slider_styles = window.getComputedStyle(self.slider);
 
-		self.element_width = element.offsetWidth;
+		self.element_width = self.elements[0].offsetWidth;
 		self.offset_width = self.element_width / outer_object.number_of_frames_per_transition;
 		self.frame_delay = outer_object.transition_time / outer_object.number_of_frames_per_transition;	
 
@@ -225,6 +225,10 @@ function Carousel(reference)
 			}
 		}
 	
+		self.animate_to_index = function(index)
+		{
+			
+		}
 	
 		self.left_button_action = function()
 		{		
@@ -266,11 +270,11 @@ function Carousel(reference)
 		//create buttons
 		// Left
 		var left_button = document.createElement("div");
-		left_button.setAttribute("class", prefix + "button_left");
+		left_button.setAttribute("class", name + "_"  + "button_left");
 		left_button.onclick = self.left_button_action;
 	
 		var left_arrow = document.createElement("span");
-		left_arrow.setAttribute("class", prefix + "left_symbol");
+		left_arrow.setAttribute("class", name + "_"  + "left_symbol");
 		left_button.appendChild(left_arrow);
 	
 		outer_div.appendChild(left_button);
@@ -279,11 +283,11 @@ function Carousel(reference)
 	
 		// Right
 		var right_button = document.createElement("div");
-		right_button.setAttribute("class", prefix + "button_right");
+		right_button.setAttribute("class", name + "_"  + "button_right");
 		right_button.onclick = self.right_button_action;
 
 		var right_arrow = document.createElement("span");
-		right_arrow.setAttribute("class", prefix + "right_symbol");
+		right_arrow.setAttribute("class", name + "_"  + "right_symbol");
 		right_button.appendChild(right_arrow);
 
 		outer_div.appendChild(right_button);
