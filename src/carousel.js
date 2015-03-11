@@ -216,18 +216,17 @@ function Carousel(reference)
 
 		self.slider_styles = window.getComputedStyle(self.slider);
 
-		self.element_width = self.elements[0].offsetWidth;
-		self.offset_width = self.element_width / outer_object.number_of_frames_per_transition;
-		self.frame_delay = outer_object.transition_time / outer_object.number_of_frames_per_transition;	
-
+		
 		self.slider_position = 0; // Which element's being pointed at. multiply by element_width to get offset, and -1 for movement to left (right button).
 		self.target_position = 0; // Which element is being, or is intended to be, displayed; changed *before* animation begins; 0 indexed
 		
-		self.frame_size = Math.floor(px_to_int(self.slider_styles.width) / self.element_width)// Number of elements on display at once
+	
 
-
+		self.element_width = self.elements[0].offsetWidth;
 		
-
+		
+		self.frame_size = Math.floor(px_to_float(self.slider_styles.width) / self.element_width)// Number of elements on display at once
+		self.frame_delay = outer_object.transition_time / outer_object.number_of_frames_per_transition;	
 	
 	
 	
@@ -236,24 +235,14 @@ function Carousel(reference)
 		// Moves the slider a small amount each time untill it hits the target, if not, recursively repeats
 		self.slide = function()
 		{		
-			//console.log("Position: " + self.slider_styles.left);
-			//console.log("Target: " + self.target_position);
+			console.log("Position: " + self.slider_styles.left);
+			console.log("Target: " + self.target_position);
+				
 		
-			var offset;
-		
-			if(px_to_int(self.slider_styles.left) < self.target_position)
-			{
-				offset = self.offset_width;
-			}
-			else
-			{
-				offset = -1 * self.offset_width;
-			}
-		
-			if(px_to_int(self.slider_styles.left) != self.target_position)
+			if(px_to_float(self.slider_styles.left) != self.target_position)
 			{
 			
-				self.slider.style.left = int_to_px(px_to_int(self.slider_styles.left) + offset);
+				self.slider.style.left = float_to_px(px_to_float(self.slider_styles.left) + self.offset_width);
 			
 				setTimeout(function(){self.slide()}, self.frame_delay);
 			}
@@ -264,6 +253,14 @@ function Carousel(reference)
 			if(index < 0 || index > self.number_of_elements) return;
 			self.target_position = self.element_width * index * -1;
 			self.slider_position = index;
+
+			self.offset_width = (self.target_position - px_to_float(self.slider_styles.left)) / outer_object.number_of_frames_per_transition;
+			
+	
+			console.log("target_position: " + self.target_position);
+			console.log("slider_styles.left: " + px_to_float(self.slider_styles.left));
+			console.log("offset width: " + self.offset_width);
+
 			console.log("Index: " + index);
 			self.slide();
 		};
@@ -412,16 +409,16 @@ function has_sub_node_class(root, class_name)
 
 
 // Converts css pixel value strings to ints
-function px_to_int(px)
+function px_to_float(px)
 {
 	if(px.indexOf("%") != -1 || px.indexOf("em") != -1 || px.indexOf("px") == -1)
 	{
-		console.error("px_to_int() requires a string containing a number followed by \"px\"");
+		console.error("px_to_float() requires a string containing a number followed by \"px\"");
 		return;
 	}
 	
 	px.replace("px", "");
-    return parseInt(px,10);
+    return parseFloat(px,10);
 }
 
 
@@ -429,11 +426,11 @@ function px_to_int(px)
 
 
 // Converts ints to css pixel value strings
-function int_to_px(px)
+function float_to_px(px)
 {
 	if(typeof px !== "number")
 	{
-		console.error("int_to_px() requires a number");
+		console.error("float_to_px() requires a number");
 		return;
 	}
 	
