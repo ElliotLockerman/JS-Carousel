@@ -5,13 +5,13 @@
 var carousels = [];
 window.addEventListener("load", function()
 {
-	var divs = document.getElementsByTagName("div");
+	var carousel_dom = document.getElementsByClassName("carousel");
 	
-	for (var i = 0; i < divs.length; i++)
+	for (var child in carousel_dom)
 	{
-		if (divs[i].className === "carousel")
-		{		
-			carousels.push(new Carousel(divs[i]));			
+		if (carousel_dom.hasOwnProperty(child) && carousel_dom[child].tagName === "DIV")
+		{	
+			carousels.push(new Carousel(carousel_dom[child]));			
 		}
 	}
 
@@ -35,19 +35,25 @@ function Carousel(reference)
 	xhr.open("GET", document.URL + "src/config.json", true);
 	xhr.onreadystatechange = function(data)
 	{
-	    if (xhr.readyState == 4) 
+	    if (xhr.readyState === 4) 
 		{
-			self.config = JSON.parse(xhr.responseText);
+			if(xhr.status === 200)
+			{
+				self.config = JSON.parse(xhr.responseText);
 	
 			
-			// Number of frames per transition
-			if(typeof self.config.transition_time === "number") 
-				self.transition_time = self.config.transition_time;
+				// Number of frames per transition
+				if(typeof self.config.transition_time === "number") 
+					self.transition_time = self.config.transition_time;
 			
-			// Number of frames per transition
-			if(typeof self.config.number_of_frames_per_transition === "number") 
-				self.number_of_frames_per_transition = self.config.number_of_frames_per_transition;
-			
+				// Number of frames per transition
+				if(typeof self.config.number_of_frames_per_transition === "number") 
+					self.number_of_frames_per_transition = self.config.number_of_frames_per_transition;
+			}
+			if(xhr.status === 404)
+			{
+				console.log("Config file not found. Using defaults");
+			}
 		}
 	}
 	xhr.send();
@@ -57,7 +63,8 @@ function Carousel(reference)
 	self.thumbs = new Array();
 	for (var child in self.carousel_main.childNodes)
 	{	
-		if(self.carousel_main.childNodes[child].nodeType === 1 && 
+		if(self.carousel_main.childNodes.hasOwnProperty(child) && 
+			self.carousel_main.childNodes[child].nodeType === 1 && 
 			has_sub_node_class(self.carousel_main.childNodes[child], "thumb_image")) // If its a DOM node and it or one of its children has the right class
 		{		
 				self.thumbs.push(self.carousel_main.childNodes[child]);
@@ -74,7 +81,10 @@ function Carousel(reference)
 	
 	for(var thumb in self.thumbs)
 	{
-		self.thumb_wrapper.appendChild(self.thumbs[thumb]);
+		if (self.thumbs.hasOwnProperty(thumb))
+		{
+			self.thumb_wrapper.appendChild(self.thumbs[thumb]);
+		}
 	}
 	
 	
@@ -85,24 +95,27 @@ function Carousel(reference)
 	
 	for(thumb in self.thumbs)
 	{
-		var link_node = get_sub_node(self.thumbs[thumb], "A")
-		if(link_node)
+		if (self.thumbs.hasOwnProperty(thumb))
 		{
-			var new_img = document.createElement("img");
-			new_img.setAttribute("src", link_node.href);
-			new_img.setAttribute("class", "primary_image");
-			self.primary_wrapper.appendChild(new_img);	
+			var link_node = get_sub_node(self.thumbs[thumb], "A")
+			if(link_node)
+			{
+				var new_img = document.createElement("img");
+				new_img.setAttribute("src", link_node.href);
+				new_img.setAttribute("class", "primary_image");
+				self.primary_wrapper.appendChild(new_img);	
 
-			// Delete the thumb's link now that its no longer neeed
-			var image = get_sub_node(link_node, "IMG")
-			var parent = link_node.parentNode
-			parent.appendChild(image);
-			parent.removeChild(link_node);
+				// Delete the thumb's link now that its no longer neeed
+				var image = get_sub_node(link_node, "IMG")
+				var parent = link_node.parentNode
+				parent.appendChild(image);
+				parent.removeChild(link_node);
 					
-		}
-		else
-		{
-			console.error("Error: The following thumbnail does not have a link to the full-size image", self.thumbs[thumb]);
+			}
+			else
+			{
+				console.error("Error: The following thumbnail does not have a link to the full-size image", self.thumbs[thumb]);
+			}
 		}
 	}
 	
@@ -151,6 +164,10 @@ function Carousel(reference)
 				outer_div.childNodes[child].nodeType === 1)
 			{			
 				self.elements_content.push(outer_div.childNodes[child]);
+				outer_div.childNodes[child].onclick = function(event)
+				{
+					outer_object.animate_sibling(event, name, self.elements_content.indexOf(event.target));
+				}
 				self.number_of_elements++;
 			}
 		}
@@ -174,16 +191,16 @@ function Carousel(reference)
 		self.elements = new Array();
 		for(var child in self.elements_content)
 		{			
-			var element = document.createElement("div");
-			element.setAttribute("class", name + "_"  + "slider_element");
-			element.onclick = function(event)
+			if(self.elements_content.hasOwnProperty(child))
 			{
-				outer_object.animate_sibling(event, name, self.elements_content.indexOf(event.target));
-			}
-			element.appendChild(self.elements_content[child]);
-			self.elements.push(element);
+				var element = document.createElement("div");
+				element.setAttribute("class", name + "_"  + "slider_element");
 			
-			self.slider.appendChild(element);	
+				element.appendChild(self.elements_content[child]);
+				self.elements.push(element);
+			
+				self.slider.appendChild(element);	
+			}
 		}
 
 		// Get some numbers, do some calculations
@@ -235,6 +252,7 @@ function Carousel(reference)
 	
 		self.animate_to_index = function(index)
 		{
+			if(index < 0 || index > self.number_of_elements) return;
 			self.target_position = self.element_width * index * -1;
 			self.slider_position = index;
 			self.slide();
@@ -331,6 +349,11 @@ function Carousel(reference)
 // Returns the first DOM node (it or its children [recursively]) that has a certain tag
 function get_sub_node(root, node_name)
 {
+	if(root.nodeType !== 1)
+	{
+		console.error("get_sub_node requires a DOM node")
+		return;
+	}
 	
 	if(root.nodeName === node_name) return root;
 	else{
@@ -351,7 +374,11 @@ function get_sub_node(root, node_name)
 // Checks if a DOM node or any of its children (recursively) has a certain class
 function has_sub_node_class(root, class_name)
 {
-	
+	if(root.nodeType !== 1)
+	{
+		console.error("get_sub_node requires a DOM node")
+		return;
+	}
 	
 	if(root.className.indexOf(class_name) !== -1) return true;
 	else{

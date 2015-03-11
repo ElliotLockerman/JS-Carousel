@@ -120,6 +120,11 @@
 	width:940px;
 }
 
+.thumb_slider_element
+{
+	width:75px;
+}
+
 .primary_button_left, .primary_button_right
 {
     width:75px;
