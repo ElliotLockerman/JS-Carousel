@@ -273,19 +273,26 @@ function Carousel(reference)
 		
 		// Moves the slider a small amount each time untill it hits the target, if not, recursively repeats
 		self.slide = function()
-		{		
-			//console.log("Position: " + self.slider_styles.left);
-			//console.log("Target: " + self.target_position);
+		{	
+			/*	
+			console.log("Position: " + self.slider_styles.left);
+			console.log("Target: " + self.target_position);
+			*/
 				
-			if(px_to_float(self.slider_styles.left) != self.target_position)
+			if(Math.abs(px_to_float(self.slider_styles.left) - self.target_position) > Math.abs(self.offset_width))
 			{
 				self.slider.style.left = float_to_px(px_to_float(self.slider_styles.left) + self.offset_width);
 				setTimeout(function(){self.slide()}, self.step_delay);
+			}
+			else // We're going to overshoot, but we're close enough that we can just go directly
+			{
+				self.slider.style.left = self.target_position;
 			}
 		}
 	
 		self.animate_to_index = function(index)
 		{
+
 			if(index < 0 || index > self.number_of_elements) return;
 			self.target_position = self.element_width * index * -1;
 			self.slider_position = index;
