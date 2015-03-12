@@ -91,7 +91,7 @@ function Carousel(reference)
 	primary_wrapper.setAttribute("class", "primary_wrapper");
 	carousel_main.insertBefore(primary_wrapper, thumb_wrapper);
 	
-	var num_elements;
+	var num_elements = 0;
 	for(thumb in thumbs)
 	{
 		if (thumbs.hasOwnProperty(thumb))
@@ -99,8 +99,7 @@ function Carousel(reference)
 			var link_node = get_sub_node(thumbs[thumb], "A")
 			if(link_node)
 			{
-				num_elements++;
-				
+				// Create the full size image
 				var new_img = document.createElement("img");
 				new_img.setAttribute("src", link_node.href);
 				new_img.setAttribute("class", "primary_image");
@@ -111,7 +110,9 @@ function Carousel(reference)
 				var parent = link_node.parentNode
 				parent.appendChild(image);
 				parent.removeChild(link_node);
-					
+				image.setAttribute("data-index", num_elements);
+				
+				num_elements++;	
 			}
 			else
 			{
@@ -140,9 +141,9 @@ function Carousel(reference)
 
 
 
-	self.animate_sibling = function(event, caller, index) // MUST BE PRIVILEGED
+	self.animate_sibling = function(caller, index) // MUST BE PRIVILEGED
 	{
-		if(caller === Sub_carousel_enum.THUMB)
+		if(caller === sub_carousels[Sub_carousel_enum.THUMB])
 		{
 			sub_carousels[Sub_carousel_enum.PRIMARY].animate_to_index(index);
 		}
@@ -175,8 +176,8 @@ function Carousel(reference)
 				elements_content.push(outer_div.childNodes[child]);
 				outer_div.childNodes[child].onclick = function(event)
 				{
-					outer_object.animate_sibling(event, name, elements_content.indexOf(event.target));
-				}
+					outer_object.animate_sibling(self, event.target.getAttribute("data-index"));
+				};
 			}
 		}
 		
