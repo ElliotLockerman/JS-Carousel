@@ -1,4 +1,13 @@
 {
-    "number_of_frames_per_transition": 40,
-    "transition_time": 100
+	"primary":
+	{
+		"speed": 5,
+		"number_of_steps_per_transition": 100
+	},
+	
+	"thumb":
+	{
+		"speed": 5,
+		"number_of_steps_per_transition": 100
+	}
 }

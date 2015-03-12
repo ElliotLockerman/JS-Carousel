@@ -25,9 +25,35 @@ function Carousel(reference)
 	
 	self.carousel_main = reference;
 
-	self.transition_time = 10; // Default, may be overwritted by config file
-	self.number_of_frames_per_transition = 40; // Default, may be overwritted by config file
+
+
+	self.Sub_carousel_enum = Object.freeze
+	({
+		PRIMARY: "primary",
+		THUMB: "thumb"
+	});
 	
+	
+	
+	
+	
+	
+	// Config
+	
+	self.config = new Object();
+	
+	self.config[self.Sub_carousel_enum.PRIMARY] =  // Default, may be overwritted by config file
+	{		
+			speed: 10,
+			number_of_steps_per_transition: 100
+	}
+	
+	self.config[self.Sub_carousel_enum.THUMB] =  // Default, may be overwritted by config file
+	{		
+			speed: 5,
+			number_of_steps_per_transition: 100
+	}
+
 
 	// Request the config file and load it up
 	self.config;
@@ -42,13 +68,17 @@ function Carousel(reference)
 				self.config = JSON.parse(xhr.responseText);
 	
 			
+				if(typeof self.config.speed === "number") 
+					self.speed = self.config.speed;
+				
+				
 				// Number of frames per transition
 				if(typeof self.config.transition_time === "number") 
 					self.transition_time = self.config.transition_time;
 			
-				// Number of frames per transition
-				if(typeof self.config.number_of_frames_per_transition === "number") 
-					self.number_of_frames_per_transition = self.config.number_of_frames_per_transition;
+				// Number of steps per transition
+				if(typeof self.config.number_of_steps_per_transition === "number") 
+					self.number_of_steps_per_transition = self.config.number_of_steps_per_transition;
 			}
 			if(xhr.status === 404)
 			{
@@ -57,6 +87,13 @@ function Carousel(reference)
 		}
 	}
 	xhr.send();
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	// Get all the thumbs 
@@ -93,6 +130,7 @@ function Carousel(reference)
 	self.primary_wrapper.setAttribute("class", "primary_wrapper");
 	self.carousel_main.insertBefore(self.primary_wrapper, self.thumb_wrapper);
 	
+	var num_elements;
 	for(thumb in self.thumbs)
 	{
 		if (self.thumbs.hasOwnProperty(thumb))
@@ -100,6 +138,8 @@ function Carousel(reference)
 			var link_node = get_sub_node(self.thumbs[thumb], "A")
 			if(link_node)
 			{
+				num_elements++;
+				
 				var new_img = document.createElement("img");
 				new_img.setAttribute("src", link_node.href);
 				new_img.setAttribute("class", "primary_image");
@@ -120,23 +160,21 @@ function Carousel(reference)
 	}
 
 	
-	self.Sub_carousel_enum = Object.freeze
-	({
-		PRIMARY: "primary",
-		THUMB: "thumb"
-	})
+	
 	
 	
 	// Create sub-carousel objects which do the rest
 	self.sub_carousels = new Array();
 	
-	self.primary_carousel = new Sub_carousel(self, self.primary_wrapper, self.Sub_carousel_enum.PRIMARY, 1);
+	self.primary_carousel = new Sub_carousel(self, self.primary_wrapper, self.Sub_carousel_enum.PRIMARY, self.config[self.Sub_carousel_enum.PRIMARY].speed, self.config[self.Sub_carousel_enum.PRIMARY].number_of_steps_per_transition);
 	self.sub_carousels.push(self.primary_carousel);
+
 	
-	self.thumb_carousel = new Sub_carousel(self, self.thumb_wrapper, self.Sub_carousel_enum.THUMB, "auto");
+	self.thumb_carousel = new Sub_carousel(self, self.thumb_wrapper, self.Sub_carousel_enum.THUMB, self.config[self.Sub_carousel_enum.THUMB].speed, self.config[self.Sub_carousel_enum.THUMB].number_of_steps_per_transition);
 	self.sub_carousels.push(self.thumb_carousel);
 
 
+	
 	
 
 
@@ -157,11 +195,13 @@ function Carousel(reference)
 
 
 
-	function Sub_carousel(outer_object, outer_div, name)
+	function Sub_carousel(outer_object, outer_div, name, spd, num_steps)
 	{
 		var self = this;
 
-
+		
+		self.speed = spd;
+		self.number_of_steps_per_transition = num_steps;
 
 		// Get list of element contents (needs to be before mask and slider to avoid including them)
 		self.elements_content = new Array()
@@ -172,12 +212,12 @@ function Carousel(reference)
 			if(outer_div.childNodes.hasOwnProperty(child) && 
 				outer_div.childNodes[child].nodeType === 1)
 			{			
+				self.number_of_elements++;
 				self.elements_content.push(outer_div.childNodes[child]);
 				outer_div.childNodes[child].onclick = function(event)
 				{
 					outer_object.animate_sibling(event, name, self.elements_content.indexOf(event.target));
 				}
-				self.number_of_elements++;
 			}
 		}
 		
@@ -223,10 +263,9 @@ function Carousel(reference)
 	
 
 		self.element_width = self.elements[0].offsetWidth;
-		
-		
 		self.frame_size = Math.floor(px_to_float(self.slider_styles.width) / self.element_width)// Number of elements on display at once
-		self.frame_delay = outer_object.transition_time / outer_object.number_of_frames_per_transition;	
+		//self.step_delay = outer_object.transition_time / outer_object.number_of_frames_per_transition;	// constant time
+		self.step_delay = 0; // will be determined in animate_to_index;
 	
 	
 	
@@ -235,16 +274,13 @@ function Carousel(reference)
 		// Moves the slider a small amount each time untill it hits the target, if not, recursively repeats
 		self.slide = function()
 		{		
-			console.log("Position: " + self.slider_styles.left);
-			console.log("Target: " + self.target_position);
+			//console.log("Position: " + self.slider_styles.left);
+			//console.log("Target: " + self.target_position);
 				
-		
 			if(px_to_float(self.slider_styles.left) != self.target_position)
 			{
-			
 				self.slider.style.left = float_to_px(px_to_float(self.slider_styles.left) + self.offset_width);
-			
-				setTimeout(function(){self.slide()}, self.frame_delay);
+				setTimeout(function(){self.slide()}, self.step_delay);
 			}
 		}
 	
@@ -254,14 +290,18 @@ function Carousel(reference)
 			self.target_position = self.element_width * index * -1;
 			self.slider_position = index;
 
-			self.offset_width = (self.target_position - px_to_float(self.slider_styles.left)) / outer_object.number_of_frames_per_transition;
+			self.offset_width = (self.target_position - px_to_float(self.slider_styles.left)) / self.number_of_steps_per_transition;
 			
-	
+			self.step_delay = ((Math.abs(self.target_position - px_to_float(self.slider_styles.left))) / (self.speed)) / self.number_of_steps_per_transition // constant speed
+			
+
+			/*
 			console.log("target_position: " + self.target_position);
 			console.log("slider_styles.left: " + px_to_float(self.slider_styles.left));
 			console.log("offset width: " + self.offset_width);
-
 			console.log("Index: " + index);
+			*/
+			
 			self.slide();
 		};
 	
