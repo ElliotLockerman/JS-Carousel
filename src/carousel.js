@@ -42,13 +42,13 @@ function Carousel(reference)
 	var config = new Object();
 	config[Sub_carousel_enum.PRIMARY] =  
 	{		
-			speed: 100, // From end-to-end, in pixels per second
+			speed: 100, // From end-to-end, in pixels per ms
 			number_of_steps_per_transition: 100 
 	}
 	
 	config[Sub_carousel_enum.THUMB] = 
 	{		
-			speed: 2, // From end-to-end, in pixels per second
+			speed: 2, // From end-to-end, in pixels per ms
 			number_of_steps_per_transition: 100
 	}
 
@@ -235,6 +235,8 @@ function Carousel(reference)
 
 		var element_width = elements[0].offsetWidth;
 		self.frame_size = Math.floor(px_to_float(slider_styles.width) / element_width)// Number of elements on display at once; MUST BE PRIVILEGED
+		if(self.frame_size > number_of_elements ) self.frame_size = number_of_elements;
+			
 		//step_delay = outer_object.transition_time / outer_object.number_of_frames_per_transition;	// constant time
 		var step_delay = 0; // will be determined in animate_to_index
 		var step_width = 0; // will be determined in animate_to_index; Note that this is the width of the 
