@@ -154,14 +154,12 @@ function Carousel(reference)
 	{
 		if(caller === sub_carousels[Sub_carousel_enum.PRIMARY])
 		{
-			if(index >=  sub_carousels[Sub_carousel_enum.THUMB].slider_position + sub_carousels[Sub_carousel_enum.THUMB].frame_size)
+			if(index <  sub_carousels[Sub_carousel_enum.THUMB].slider_position || 
+				index >  sub_carousels[Sub_carousel_enum.THUMB].slider_position + sub_carousels[Sub_carousel_enum.THUMB].frame_size - 1)
 			{
-				sub_carousels[Sub_carousel_enum.THUMB].right_button_action();
+				sub_carousels[Sub_carousel_enum.THUMB].animate_to_index(index);
 			}
-			else if (index < sub_carousels[Sub_carousel_enum.THUMB].slider_position)
-			{
-				sub_carousels[Sub_carousel_enum.THUMB].left_button_action();
-			}
+		
 		}
 	}
 
@@ -178,7 +176,7 @@ function Carousel(reference)
 
 		// Get list of element contents (needs to be before mask and slider to avoid including them)
 		var elements_content = new Array()
-		var number_of_elements = 0; // MUST BE PUBLIC
+		var number_of_elements = 0; 
 		for(var child in outer_div.childNodes)
 		{
 			
@@ -268,7 +266,9 @@ function Carousel(reference)
 		self.animate_to_index = function(index) // MUST BE PRIVILEGED
 		{			
 
-			if(index < 0 || index > number_of_elements) return;
+			if(index < 0) index = 0;
+			if(index > number_of_elements - self.frame_size) index = number_of_elements - self.frame_size;
+	
 			target_position = element_width * index * -1;
 			self.slider_position = index;
 
