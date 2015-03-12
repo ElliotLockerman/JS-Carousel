@@ -150,7 +150,20 @@ function Carousel(reference)
 	}
 
 
-
+	self.alert_position_change = function(caller, index) // MUST BE PRIVILEGED
+	{
+		if(caller === sub_carousels[Sub_carousel_enum.PRIMARY])
+		{
+			if(index >=  sub_carousels[Sub_carousel_enum.THUMB].slider_position + sub_carousels[Sub_carousel_enum.THUMB].frame_size)
+			{
+				sub_carousels[Sub_carousel_enum.THUMB].right_button_action();
+			}
+			else if (index < sub_carousels[Sub_carousel_enum.THUMB].slider_position)
+			{
+				sub_carousels[Sub_carousel_enum.THUMB].left_button_action();
+			}
+		}
+	}
 
 
 
@@ -165,7 +178,7 @@ function Carousel(reference)
 
 		// Get list of element contents (needs to be before mask and slider to avoid including them)
 		var elements_content = new Array()
-		var number_of_elements = 0;
+		var number_of_elements = 0; // MUST BE PUBLIC
 		for(var child in outer_div.childNodes)
 		{
 			
@@ -217,13 +230,13 @@ function Carousel(reference)
 		var slider_styles = window.getComputedStyle(slider);
 
 		
-		var slider_position = 0; // Which element's being pointed at. multiply by element_width to get offset, and -1 for movement to left (right button).
+		self.slider_position = 0; // Which element's being pointed at. multiply by element_width to get offset, and -1 for movement to left (right button).
 		var target_position = 0; // Which element is being, or is intended to be, displayed; changed *before* animation begins; 0 indexed
 		
 	
 
 		var element_width = elements[0].offsetWidth;
-		var frame_size = Math.floor(px_to_float(slider_styles.width) / element_width)// Number of elements on display at once
+		self.frame_size = Math.floor(px_to_float(slider_styles.width) / element_width)// Number of elements on display at once; MUST BE PRIVILEGED
 		//step_delay = outer_object.transition_time / outer_object.number_of_frames_per_transition;	// constant time
 		var step_delay = 0; // will be determined in animate_to_index
 		var step_width = 0; // will be determined in animate_to_index; Note that this is the width of the 
@@ -257,13 +270,13 @@ function Carousel(reference)
 
 			if(index < 0 || index > number_of_elements) return;
 			target_position = element_width * index * -1;
-			slider_position = index;
+			self.slider_position = index;
 
 			step_width = (target_position - px_to_float(slider_styles.left)) / number_of_steps_per_transition;
 			
 			step_delay = ((Math.abs(target_position - px_to_float(slider_styles.left))) / (speed)) / number_of_steps_per_transition // constant speed
 			
-			
+			outer_object.alert_position_change(self, index);
 			/*
 			console.log("target_position: " + target_position);
 			console.log("slider_styles.left: " + px_to_float(slider_styles.left));
@@ -274,34 +287,34 @@ function Carousel(reference)
 			slide();
 		};
 	
-		var left_button_action = function()
+		self.left_button_action = function()
 		{		
 			var index = 0;
 			
-			if(slider_position > 0) // Normal move
+			if(self.slider_position > 0) // Normal move
 			{
-				index = slider_position - frame_size;
+				index = self.slider_position - self.frame_size;
 				if(index < 0) index = 0;
 			}
-			else if (slider_position == 0)  // Moving past the end loops
+			else if (self.slider_position == 0)  // Moving past the end loops
 			{		
-				index = number_of_elements - frame_size;
+				index = number_of_elements - self.frame_size;
 			}
 			
 			self.animate_to_index(index);
 		};
 	
-		var right_button_action = function()
+		self.right_button_action = function()
 		{					
 			var index = 0;
 			
 			
-			if(slider_position < number_of_elements - frame_size) // Normal move
+			if(self.slider_position < number_of_elements - self.frame_size) // Normal move
 			{
-				index = slider_position + frame_size;
-				if(index >= number_of_elements - frame_size) index = number_of_elements - frame_size;
+				index = self.slider_position + self.frame_size;
+				if(index >= number_of_elements - self.frame_size) index = number_of_elements - self.frame_size;
 			}
-			else if (slider_position >= number_of_elements - frame_size) // Moving past the end loops
+			else if (self.slider_position >= number_of_elements - self.frame_size) // Moving past the end loops
 			{
 				index = 0;
 			}
@@ -315,7 +328,7 @@ function Carousel(reference)
 		// Left
 		var left_button = document.createElement("div");
 		left_button.setAttribute("class", name + "_"  + "button_left");
-		left_button.onclick = left_button_action;
+		left_button.onclick = self.left_button_action;
 	
 		var left_arrow = document.createElement("span");
 		left_arrow.setAttribute("class", name + "_"  + "left_symbol");
@@ -328,7 +341,7 @@ function Carousel(reference)
 		// Right
 		var right_button = document.createElement("div");
 		right_button.setAttribute("class", name + "_"  + "button_right");
-		right_button.onclick = right_button_action;
+		right_button.onclick = self.right_button_action;
 
 		var right_arrow = document.createElement("span");
 		right_arrow.setAttribute("class", name + "_"  + "right_symbol");
