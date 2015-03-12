@@ -274,19 +274,20 @@ function Carousel(reference)
 		// Moves the slider a small amount each time untill it hits the target, if not, recursively repeats
 		self.slide = function()
 		{	
-			/*	
+				
 			console.log("Position: " + self.slider_styles.left);
 			console.log("Target: " + self.target_position);
-			*/
+			
 				
-			if(Math.abs(px_to_float(self.slider_styles.left) - self.target_position) > Math.abs(self.offset_width))
+			if(Math.abs(px_to_float(self.slider_styles.left) - self.target_position) >= Math.abs(self.offset_width))
 			{
 				self.slider.style.left = float_to_px(px_to_float(self.slider_styles.left) + self.offset_width);
 				setTimeout(function(){self.slide()}, self.step_delay);
 			}
 			else // We're going to overshoot, but we're close enough that we can just go directly
 			{
-				self.slider.style.left = self.target_position;
+				self.slider.style.left = float_to_px(self.target_position);
+				console.log("Position: " + self.slider_styles.left);
 			}
 		}
 	
@@ -302,12 +303,12 @@ function Carousel(reference)
 			self.step_delay = ((Math.abs(self.target_position - px_to_float(self.slider_styles.left))) / (self.speed)) / self.number_of_steps_per_transition // constant speed
 			
 
-			/*
+			
 			console.log("target_position: " + self.target_position);
 			console.log("slider_styles.left: " + px_to_float(self.slider_styles.left));
 			console.log("offset width: " + self.offset_width);
 			console.log("Index: " + index);
-			*/
+			
 			
 			self.slide();
 		};
