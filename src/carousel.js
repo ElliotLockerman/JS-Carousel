@@ -176,7 +176,7 @@ function Carousel(reference)
 				elements_content.push(outer_div.childNodes[child]);
 				outer_div.childNodes[child].onclick = function(event)
 				{
-					outer_object.animate_sibling(self, event.target.getAttribute("data-index"));
+					outer_object.animate_sibling(self, parseInt(event.target.getAttribute("data-index")));
 				};
 			}
 		}
@@ -234,6 +234,7 @@ function Carousel(reference)
 		// Moves the slider a small amount each time untill it hits the target, if not, recursively repeats
 		var slide = function()
 		{	
+
 			/*
 			console.log("Position: " + slider_styles.left);
 			console.log("Target: " + target_position);
@@ -252,7 +253,7 @@ function Carousel(reference)
 		}
 	
 		self.animate_to_index = function(index) // MUST BE PRIVILEGED
-		{
+		{			
 
 			if(index < 0 || index > number_of_elements) return;
 			target_position = element_width * index * -1;
@@ -261,6 +262,7 @@ function Carousel(reference)
 			step_width = (target_position - px_to_float(slider_styles.left)) / number_of_steps_per_transition;
 			
 			step_delay = ((Math.abs(target_position - px_to_float(slider_styles.left))) / (speed)) / number_of_steps_per_transition // constant speed
+			
 			
 			/*
 			console.log("target_position: " + target_position);
@@ -292,6 +294,7 @@ function Carousel(reference)
 		var right_button_action = function()
 		{					
 			var index = 0;
+			
 			
 			if(slider_position < number_of_elements - frame_size) // Normal move
 			{
