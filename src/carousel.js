@@ -39,18 +39,16 @@ function Carousel(reference)
 	
 	
 	// Config
-	
 	self.config = new Object();
-	
-	self.config[self.Sub_carousel_enum.PRIMARY] =  // Default, may be overwritted by config file
+	self.config[self.Sub_carousel_enum.PRIMARY] =  
 	{		
-			speed: 10,
-			number_of_steps_per_transition: 100
+			speed: 100, // From end-to-end, in pixels per second
+			number_of_steps_per_transition: 100 
 	}
 	
-	self.config[self.Sub_carousel_enum.THUMB] =  // Default, may be overwritted by config file
+	self.config[self.Sub_carousel_enum.THUMB] = 
 	{		
-			speed: 5,
+			speed: 2, // From end-to-end, in pixels per second
 			number_of_steps_per_transition: 100
 	}
 
@@ -127,14 +125,12 @@ function Carousel(reference)
 	
 	
 	// Create sub-carousel objects which do the rest
-	self.sub_carousels = new Array();
+	self.sub_carousels = new Object();
 	
-	self.primary_carousel = new Sub_carousel(self, self.primary_wrapper, self.Sub_carousel_enum.PRIMARY, self.config[self.Sub_carousel_enum.PRIMARY].speed, self.config[self.Sub_carousel_enum.PRIMARY].number_of_steps_per_transition);
-	self.sub_carousels.push(self.primary_carousel);
+	self.sub_carousels[self.Sub_carousel_enum.PRIMARY] = new Sub_carousel(self, self.primary_wrapper, self.Sub_carousel_enum.PRIMARY, self.config[self.Sub_carousel_enum.PRIMARY].speed, self.config[self.Sub_carousel_enum.PRIMARY].number_of_steps_per_transition);
 
 	
-	self.thumb_carousel = new Sub_carousel(self, self.thumb_wrapper, self.Sub_carousel_enum.THUMB, self.config[self.Sub_carousel_enum.THUMB].speed, self.config[self.Sub_carousel_enum.THUMB].number_of_steps_per_transition);
-	self.sub_carousels.push(self.thumb_carousel);
+	self.sub_carousels[self.Sub_carousel_enum.THUMB] = new Sub_carousel(self, self.thumb_wrapper, self.Sub_carousel_enum.THUMB, self.config[self.Sub_carousel_enum.THUMB].speed, self.config[self.Sub_carousel_enum.THUMB].number_of_steps_per_transition);
 
 
 	
