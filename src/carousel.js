@@ -55,44 +55,7 @@ function Carousel(reference)
 	}
 
 
-	// Request the config file and load it up
-	self.config;
-	var xhr = new XMLHttpRequest();
-	xhr.open("GET", document.URL + "src/config.json", true);
-	xhr.onreadystatechange = function(data)
-	{
-	    if (xhr.readyState === 4) 
-		{
-			if(xhr.status === 200)
-			{
-				self.config = JSON.parse(xhr.responseText);
-	
-			
-				if(typeof self.config.speed === "number") 
-					self.speed = self.config.speed;
-				
-				
-				// Number of frames per transition
-				if(typeof self.config.transition_time === "number") 
-					self.transition_time = self.config.transition_time;
-			
-				// Number of steps per transition
-				if(typeof self.config.number_of_steps_per_transition === "number") 
-					self.number_of_steps_per_transition = self.config.number_of_steps_per_transition;
-			}
-			if(xhr.status === 404)
-			{
-				console.log("Config file not found. Using defaults");
-			}
-		}
-	}
-	xhr.send();
-	
-	
-	
-	
-	
-	
+
 	
 	
 	
@@ -274,10 +237,10 @@ function Carousel(reference)
 		// Moves the slider a small amount each time untill it hits the target, if not, recursively repeats
 		self.slide = function()
 		{	
-				
+			/*
 			console.log("Position: " + self.slider_styles.left);
 			console.log("Target: " + self.target_position);
-			
+			*/
 				
 			if(Math.abs(px_to_float(self.slider_styles.left) - self.target_position) >= Math.abs(self.offset_width))
 			{
@@ -287,7 +250,7 @@ function Carousel(reference)
 			else // We're going to overshoot, but we're close enough that we can just go directly
 			{
 				self.slider.style.left = float_to_px(self.target_position);
-				console.log("Position: " + self.slider_styles.left);
+				//console.log("Position: " + self.slider_styles.left);
 			}
 		}
 	
@@ -302,13 +265,12 @@ function Carousel(reference)
 			
 			self.step_delay = ((Math.abs(self.target_position - px_to_float(self.slider_styles.left))) / (self.speed)) / self.number_of_steps_per_transition // constant speed
 			
-
-			
+			/*
 			console.log("target_position: " + self.target_position);
 			console.log("slider_styles.left: " + px_to_float(self.slider_styles.left));
 			console.log("offset width: " + self.offset_width);
 			console.log("Index: " + index);
-			
+			*/
 			
 			self.slide();
 		};
