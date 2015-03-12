@@ -1,10 +1,10 @@
-"use strict";
+
 
 
 // Initialize carousels
 var carousels = [];
 window.addEventListener("load", function()
-{
+{"use strict";
 	var carousel_dom = document.getElementsByClassName("carousel");
 	
 	for (var child in carousel_dom)
@@ -20,7 +20,7 @@ window.addEventListener("load", function()
 
 
 function Carousel(reference)
-{	
+{"use strict";	
 	var self = this;
 	
 	var carousel_main = reference;
@@ -39,18 +39,18 @@ function Carousel(reference)
 	
 	
 	// Config
-	var config = new Object();
+	var config = {};
 	config[Sub_carousel_enum.PRIMARY] =  
 	{		
 			speed: 100, // From end-to-end, in pixels per ms
 			number_of_steps_per_transition: 100 
-	}
+	};
 	
 	config[Sub_carousel_enum.THUMB] = 
 	{		
 			speed: 2, // From end-to-end, in pixels per ms
 			number_of_steps_per_transition: 100
-	}
+	};
 
 
 
@@ -58,7 +58,7 @@ function Carousel(reference)
 	
 	
 	// Get all the thumbs 
-	var thumbs = new Array();
+	var thumbs = [];
 	for (var child in carousel_main.childNodes)
 	{	
 		if(carousel_main.childNodes.hasOwnProperty(child) && 
@@ -96,7 +96,7 @@ function Carousel(reference)
 	{
 		if (thumbs.hasOwnProperty(thumb))
 		{
-			var link_node = get_sub_node(thumbs[thumb], "A")
+			var link_node = get_sub_node(thumbs[thumb], "A");
 			if(link_node)
 			{
 				// Create the full size image
@@ -106,8 +106,8 @@ function Carousel(reference)
 				primary_wrapper.appendChild(new_img);	
 
 				// Delete the thumb's link now that its no longer neeed
-				var image = get_sub_node(link_node, "IMG")
-				var parent = link_node.parentNode
+				var image = get_sub_node(link_node, "IMG");
+				var parent = link_node.parentNode;
 				parent.appendChild(image);
 				parent.removeChild(link_node);
 				image.setAttribute("data-index", num_elements);
@@ -126,7 +126,7 @@ function Carousel(reference)
 	
 	
 	// Create sub-carousel objects which do the rest
-	var sub_carousels = new Object();
+	var sub_carousels = {};
 	
 	sub_carousels[Sub_carousel_enum.PRIMARY] = new Sub_carousel(self, primary_wrapper, Sub_carousel_enum.PRIMARY, config[Sub_carousel_enum.PRIMARY].speed, config[Sub_carousel_enum.PRIMARY].number_of_steps_per_transition);
 
@@ -147,7 +147,7 @@ function Carousel(reference)
 		{
 			sub_carousels[Sub_carousel_enum.PRIMARY].animate_to_index(index);
 		}
-	}
+	};
 
 
 	self.alert_position_change = function(caller, index) // MUST BE PRIVILEGED
@@ -161,7 +161,7 @@ function Carousel(reference)
 			}
 		
 		}
-	}
+	};
 
 
 
@@ -175,7 +175,11 @@ function Carousel(reference)
 		var number_of_steps_per_transition = num_steps;
 
 		// Get list of element contents (needs to be before mask and slider to avoid including them)
-		var elements_content = new Array()
+		self.element_click = function(event)
+		{
+			outer_object.animate_sibling(self, parseInt(event.target.getAttribute("data-index")));
+		};
+		var elements_content = [];
 		var number_of_elements = 0; 
 		for(var child in outer_div.childNodes)
 		{
@@ -185,10 +189,7 @@ function Carousel(reference)
 			{			
 				number_of_elements++;
 				elements_content.push(outer_div.childNodes[child]);
-				outer_div.childNodes[child].onclick = function(event)
-				{
-					outer_object.animate_sibling(self, parseInt(event.target.getAttribute("data-index")));
-				};
+				outer_div.childNodes[child].onclick = self.element_click;
 			}
 		}
 		
@@ -208,8 +209,8 @@ function Carousel(reference)
 		
 		
 		// Wrap images in element divs and add to slider
-		var elements = new Array();
-		for(var child in elements_content)
+		var elements = [];
+		for(child in elements_content)
 		{			
 			if(elements_content.hasOwnProperty(child))
 			{
@@ -234,7 +235,7 @@ function Carousel(reference)
 	
 
 		var element_width = elements[0].offsetWidth;
-		self.frame_size = Math.floor(px_to_float(slider_styles.width) / element_width)// Number of elements on display at once; MUST BE PRIVILEGED
+		self.frame_size = Math.floor(px_to_float(slider_styles.width) / element_width); // Number of elements on display at once; MUST BE PRIVILEGED
 		if(self.frame_size > number_of_elements ) self.frame_size = number_of_elements;
 			
 		//step_delay = outer_object.transition_time / outer_object.number_of_frames_per_transition;	// constant time
@@ -246,7 +247,7 @@ function Carousel(reference)
 		
 		// Moves the slider a small amount each time untill it hits the target, if not, recursively repeats
 		var slide = function()
-		{	
+		{
 
 			/*
 			console.log("Position: " + slider_styles.left);
@@ -256,17 +257,17 @@ function Carousel(reference)
 			if(Math.abs(px_to_float(slider_styles.left) - target_position) >= Math.abs(step_width))
 			{
 				slider.style.left = float_to_px(px_to_float(slider_styles.left) + step_width);
-				setTimeout(function(){slide()}, step_delay);
+				setTimeout(function(){slide();}, step_delay);
 			}
 			else // We're going to overshoot, but we're close enough that we can just go directly
 			{
 				slider.style.left = float_to_px(target_position);
 				//console.log("Position: " + slider_styles.left);
 			}
-		}
+		};
 	
 		self.animate_to_index = function(index) // MUST BE PRIVILEGED
-		{			
+		{		
 
 			if(index < 0) index = 0;
 			if(index > number_of_elements - self.frame_size) index = number_of_elements - self.frame_size;
@@ -276,7 +277,7 @@ function Carousel(reference)
 
 			step_width = (target_position - px_to_float(slider_styles.left)) / number_of_steps_per_transition;
 			
-			step_delay = ((Math.abs(target_position - px_to_float(slider_styles.left))) / (speed)) / number_of_steps_per_transition // constant speed
+			step_delay = ((Math.abs(target_position - px_to_float(slider_styles.left))) / (speed)) / number_of_steps_per_transition; // constant speed
 			
 			outer_object.alert_position_change(self, index);
 			/*
@@ -298,7 +299,7 @@ function Carousel(reference)
 				index = self.slider_position - self.frame_size;
 				if(index < 0) index = 0;
 			}
-			else if (self.slider_position == 0)  // Moving past the end loops
+			else if (self.slider_position === 0)  // Moving past the end loops
 			{		
 				index = number_of_elements - self.frame_size;
 			}
@@ -354,13 +355,13 @@ function Carousel(reference)
 	
 	
 	
-	};
+	}
 	
 
 	
 	
 	
-};
+}
 
 
 
@@ -379,10 +380,10 @@ function Carousel(reference)
 
 // Returns the first DOM node (it or its children [recursively]) that has a certain tag
 function get_sub_node(root, node_name)
-{
+{"use strict";
 	if(root.nodeType !== 1)
 	{
-		console.error("get_sub_node requires a DOM node")
+		console.error("get_sub_node requires a DOM node");
 		return;
 	}
 	
@@ -392,7 +393,7 @@ function get_sub_node(root, node_name)
 		{
 			if(root.childNodes[child].nodeType === 1) // If its a DOM node
 			{
-				return get_sub_node(root.childNodes[child], node_name)
+				return get_sub_node(root.childNodes[child], node_name);
 			}
 		}
 	}
@@ -404,10 +405,10 @@ function get_sub_node(root, node_name)
 
 // Checks if a DOM node or any of its children (recursively) has a certain class
 function has_sub_node_class(root, class_name)
-{
+{"use strict";
 	if(root.nodeType !== 1)
 	{
-		console.error("get_sub_node requires a DOM node")
+		console.error("get_sub_node requires a DOM node");
 		return;
 	}
 	
@@ -435,7 +436,7 @@ function has_sub_node_class(root, class_name)
 
 // Converts css pixel value strings to ints
 function px_to_float(px)
-{
+{"use strict";
 	if(px.indexOf("%") != -1 || px.indexOf("em") != -1 || px.indexOf("px") == -1)
 	{
 		console.error("px_to_float() requires a string containing a number followed by \"px\"");
@@ -452,7 +453,7 @@ function px_to_float(px)
 
 // Converts ints to css pixel value strings
 function float_to_px(px)
-{
+{"use strict";
 	if(typeof px !== "number")
 	{
 		console.error("float_to_px() requires a number");
