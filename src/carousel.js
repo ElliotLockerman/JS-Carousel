@@ -138,9 +138,10 @@ function Carousel(reference)
 	};
 
 
-	self.primary_alert_position_change = function(caller, index)
+	self.primary_alert_position_change = function(index)
 	{
-
+		sub_carousels[Sub_carousel_enum.THUMB].set_selected(index);
+		
 		if(index <  sub_carousels[Sub_carousel_enum.THUMB].slider_position || 
 			index >  sub_carousels[Sub_carousel_enum.THUMB].slider_position + sub_carousels[Sub_carousel_enum.THUMB].frame_size - 1)
 		{
@@ -244,7 +245,23 @@ function Carousel(reference)
 		//step_delay = outer_object.transition_time / outer_object.number_of_frames_per_transition;	// constant time
 		var step_delay = 0; // will be determined in animate_to_index
 		var step_width = 0; // will be determined in animate_to_index; Note that this is the width of the 
+		
 	
+	
+	
+		var currently_selected = 0;
+		self.set_selected = function(index)
+		{
+			elements_content[currently_selected].className = elements_content[currently_selected].className.replace(name + "_image_selected", "");
+			elements_content[index].className = elements_content[index].className + " " + name + "_image_selected";
+			currently_selected = index;
+		}
+		self.set_selected(0);
+	
+
+
+
+
 	
 		// Button and Movement Functions
 		
@@ -282,7 +299,8 @@ function Carousel(reference)
 			
 			step_delay = ((Math.abs(target_position - px_to_float(slider_styles.left))) / (speed)) / number_of_steps_per_transition; // constant speed
 			
-			on_position_change(self, index);
+			on_position_change(index);
+
 			/*
 			console.log("target_position: " + target_position);
 			console.log("slider_styles.left: " + px_to_float(slider_styles.left));
