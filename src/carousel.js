@@ -124,14 +124,42 @@ function Carousel(reference)
 	
 	
 	
+
+
+
+
+
+
+	self.thumb_click = function(index)
+	{
+
+		sub_carousels[Sub_carousel_enum.PRIMARY].animate_to_index(index);
+	
+	};
+
+
+	self.primary_alert_position_change = function(caller, index)
+	{
+
+		if(index <  sub_carousels[Sub_carousel_enum.THUMB].slider_position || 
+			index >  sub_carousels[Sub_carousel_enum.THUMB].slider_position + sub_carousels[Sub_carousel_enum.THUMB].frame_size - 1)
+		{
+			sub_carousels[Sub_carousel_enum.THUMB].animate_to_index(index);
+		}
+	
+	};
+
+
+
+
 	
 	// Create sub-carousel objects which do the rest
 	var sub_carousels = {};
 	
-	sub_carousels[Sub_carousel_enum.PRIMARY] = new Sub_carousel(self, primary_wrapper, Sub_carousel_enum.PRIMARY, config[Sub_carousel_enum.PRIMARY].speed, config[Sub_carousel_enum.PRIMARY].number_of_steps_per_transition);
+	sub_carousels[Sub_carousel_enum.PRIMARY] = new Sub_carousel(self, primary_wrapper, Sub_carousel_enum.PRIMARY, config[Sub_carousel_enum.PRIMARY].speed, config[Sub_carousel_enum.PRIMARY].number_of_steps_per_transition, function(){return;}, self.primary_alert_position_change);
 
 	
-	sub_carousels[Sub_carousel_enum.THUMB] = new Sub_carousel(self, thumb_wrapper, Sub_carousel_enum.THUMB, config[Sub_carousel_enum.THUMB].speed, config[Sub_carousel_enum.THUMB].number_of_steps_per_transition);
+	sub_carousels[Sub_carousel_enum.THUMB] = new Sub_carousel(self, thumb_wrapper, Sub_carousel_enum.THUMB, config[Sub_carousel_enum.THUMB].speed, config[Sub_carousel_enum.THUMB].number_of_steps_per_transition, self.thumb_click, function(){return;});
 
 
 	
@@ -141,32 +169,7 @@ function Carousel(reference)
 
 
 
-	self.animate_sibling = function(caller, index) // MUST BE PRIVILEGED
-	{
-		if(caller === sub_carousels[Sub_carousel_enum.THUMB])
-		{
-			sub_carousels[Sub_carousel_enum.PRIMARY].animate_to_index(index);
-		}
-	};
-
-
-	self.alert_position_change = function(caller, index) // MUST BE PRIVILEGED
-	{
-		if(caller === sub_carousels[Sub_carousel_enum.PRIMARY])
-		{
-			if(index <  sub_carousels[Sub_carousel_enum.THUMB].slider_position || 
-				index >  sub_carousels[Sub_carousel_enum.THUMB].slider_position + sub_carousels[Sub_carousel_enum.THUMB].frame_size - 1)
-			{
-				sub_carousels[Sub_carousel_enum.THUMB].animate_to_index(index);
-			}
-		
-		}
-	};
-
-
-
-
-	function Sub_carousel(outer_object, outer_div, name, spd, num_steps)
+	function Sub_carousel(outer_object, outer_div, name, spd, num_steps, on_click, on_position_change)
 	{
 		var self = this;
 
@@ -177,7 +180,7 @@ function Carousel(reference)
 		// Get list of element contents (needs to be before mask and slider to avoid including them)
 		self.element_click = function(event)
 		{
-			outer_object.animate_sibling(self, parseInt(event.target.getAttribute("data-index")));
+			on_click(parseInt(event.target.getAttribute("data-index")));
 		};
 		var elements_content = [];
 		var number_of_elements = 0; 
@@ -279,7 +282,7 @@ function Carousel(reference)
 			
 			step_delay = ((Math.abs(target_position - px_to_float(slider_styles.left))) / (speed)) / number_of_steps_per_transition; // constant speed
 			
-			outer_object.alert_position_change(self, index);
+			on_position_change(self, index);
 			/*
 			console.log("target_position: " + target_position);
 			console.log("slider_styles.left: " + px_to_float(slider_styles.left));
